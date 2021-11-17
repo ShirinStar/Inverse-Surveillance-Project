@@ -36,8 +36,8 @@ window.addEventListener('resize', () => {
 })
 
 
-const camera = new THREE.PerspectiveCamera(70, sizes.width / sizes.height, 10, 5000)
-camera.position.z = 500
+const camera = new THREE.PerspectiveCamera(70, sizes.width / sizes.height, 10, 10000)
+camera.position.z = 700
 scene.add(camera)
 
 const controls = new OrbitControls(camera, canvas)
@@ -45,12 +45,10 @@ controls.enableDamping = true
 
 
 ///svg Tatreez///
-
 const loader = new SVGLoader();
 const SVGViewBox = 512;
-// load a SVG resource
+
 loader.load(
-  // resource URL
   'tatreez512.svg',
   // called when the resource is loaded
   function (data) {
@@ -60,12 +58,15 @@ loader.load(
     let points = []
 
     let maxPoints = paths.length * 100;
+
     positions = new Float32Array(maxPoints * 3)
     opacity = new Float32Array(maxPoints)
 
-    let randX = (Math.random() - 0.5) * 10
-    let randY = (Math.random() - 0.5) * 10
+    //adding randomness to the position 
+    let randX = (Math.random() - 0.5) * 30
+    let randY = (Math.random() - 0.5) * 30
 
+    //accessing the x,y of tthe path and pushing them to the array
     paths.forEach(line => {
       line.subPaths.forEach(currentPoint => {
         points.push(
@@ -78,6 +79,7 @@ loader.load(
       })
     })
 
+    // creating an object that contains all the data to update movment... 
     lines.push({
       path: data.paths,
       length: paths.length,
@@ -86,11 +88,13 @@ loader.load(
       speed: 1
     })
 
+    //creating intial position to the geo
     for (let i = 0; i < maxPoints; i++) {
       positions.set([Math.random(), Math.random(), 0], i * 3)
       opacity.set([Math.random() / 5], i)
     }
 
+    //setting the arrays as geo attributes
     geometry = new THREE.BufferGeometry()
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('opacity', new THREE.BufferAttribute(opacity, 1));
@@ -100,8 +104,8 @@ loader.load(
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
       transparent: true,
-      // depthTest: true,
-      depthWrite: false,
+      depthTest: true,
+      depthWrite: true,
       // alphaTest: 0.001,
       blending: THREE.AdditiveBlending
     })
@@ -122,12 +126,7 @@ loader.load(
 
   }
 );
-
-// ///
-
-
-
-
+////
 
 
 const renderer = new THREE.WebGLRenderer({
@@ -139,24 +138,26 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const clock = new THREE.Clock()
 
+//animationg particles path
 const updateTrails = () => {
-
   let j = 0;
 
+  //accesing the object that was created with the svg load
   lines.forEach(line => {
-
     line.currentPos += line.speed
-    line.currentPos = line.currentPos % line.points.length
+    line.currentPos = line.currentPos % line.points.length // keeping them inset 
 
+    //showwing only 100 particles at a time
     for (let i = 0; i < 100; i++) {
       let index = (line.currentPos + i) % line.points.length
       let showPoint = line.points[index]
+      //using additional index to loop over the path
       positions.set([showPoint.x, showPoint.y, showPoint.z], j * 3)
-      opacity.set([i / 300], j)
+      opacity.set([i / 200], j)
       j++
     }
   })
-
+  //updating
   if (SVGMesh) {
     SVGMesh.geometry.attributes.position.array = positions
     SVGMesh.geometry.attributes.position.needsUpdate = true;
