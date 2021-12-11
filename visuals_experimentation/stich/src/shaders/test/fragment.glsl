@@ -4,24 +4,23 @@ uniform float uLengthStripX;
 uniform float uLengthStripY;
 uniform float uWidthStripX;
 uniform float uWidthStripY;
+uniform float uNumberOfStrips;
 
 varying vec2 vUv;
 
 void main()
 {
-  //try to animate the value of the first step from 0-1
-  //the offset i'm adding needs to be half of the step
 
-  //also try to add to the vertex cos + sin
-  float numberOfStrips = 40.0;
+ 
 
-  float stripY = step(uWidthStripY, mod(vUv.x * numberOfStrips + 0.5, 1.0));
-  stripY *= step(uLengthStripY, mod(vUv.y * numberOfStrips, 1.0));
+  float stripY = step(uWidthStripY, mod(vUv.x * uNumberOfStrips + 0.3, 1.0));
+  stripY *= step(uLengthStripY, mod(vUv.y * uNumberOfStrips, 1.0));
 
-  float stripX = step(uWidthStripX, mod(vUv.y * numberOfStrips + 0.5, 1.0));
-  stripX *= step(uLengthStripX, mod(vUv.x * numberOfStrips, 1.0));
+  float stripX = step(uWidthStripX, mod(vUv.y * uNumberOfStrips + 0.5, 1.0));
+  stripX *= step(uLengthStripX, mod(vUv.x * uNumberOfStrips, 1.0));
 
   float strength = stripY + stripX;
+ 
 
   strength = clamp(strength, 0.0, 1.0);
 

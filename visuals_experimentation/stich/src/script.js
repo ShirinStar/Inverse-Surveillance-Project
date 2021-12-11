@@ -14,7 +14,6 @@ const scene = new THREE.Scene()
 
 const video = document.querySelector('.video')
 const videoTexture = new THREE.VideoTexture(video)
-console.log(videoTexture);
 
 //scene content
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
@@ -26,10 +25,11 @@ const material = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
       uTexture: { value: videoTexture },
-      uLengthStripX: {value: 0.9},
-      uLengthStripY: {value: 0.9},
-      uWidthStripX: {value: 0.9},
-      uWidthStripY: {value: 0.9},
+      uLengthStripX: {value: 0.99},
+      uLengthStripY: {value: 0.99},
+      uWidthStripX: {value: 0.99},
+      uWidthStripY: {value: 0.99},
+      uNumberOfStrips: {value: 25},
     }
 })
 
@@ -67,25 +67,31 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 
 gsap.to(material.uniforms.uLengthStripX, {
-  duration: 10,
-  value: 0.1,
+  duration: 20,
+  value: 0.01,
   delay: 3
 })
 gsap.to(material.uniforms.uLengthStripY, {
-  duration: 5,
-  value: 0.1,
-  delay: 7
-})
-gsap.to(material.uniforms.uWidthStripX, {
-  duration: 5,
-  value: 0.1,
+  duration: 15,
+  value: 0.01,
   delay: 10
 })
-gsap.to(material.uniforms.uWidthStripY, {
-  duration: 6,
-  value: 0.1,
-  delay: 13
+gsap.to(material.uniforms.uWidthStripX, {
+  duration: 20,
+  value: 0.7,
+  delay: 25
 })
+gsap.to(material.uniforms.uWidthStripY, {
+  duration: 25,
+  value: 0.4,
+  delay: 30
+})
+gsap.to(material.uniforms.uWidthStripX, {
+  duration: 10,
+  value: 0.1,
+  delay: 35
+})
+
 
 const clock = new THREE.Clock()
 

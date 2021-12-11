@@ -95,12 +95,12 @@ void main()
    
     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
  
-    float wave = cnoise(vec3(modelPosition.xy , uTime * 0.5));
-    wave += sin(modelPosition.x * 8.0 + uTime) * 0.05;
-    modelPosition.z += wave * 0.3;
+    float wave = cnoise(vec3(modelPosition.xy , uTime * 0.7));
+    wave += sin(modelPosition.x * 5.0 + uTime) * 0.5;
+    modelPosition.z += wave * 0.08;
 
     //this is just wave like flag
-   // modelPosition.z += sin(modelPosition.x * 6.0 + uTime) * 0.05;
+    //modelPosition.z += sin(modelPosition.x * 8.0 + uTime) * 0.05;
 
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
