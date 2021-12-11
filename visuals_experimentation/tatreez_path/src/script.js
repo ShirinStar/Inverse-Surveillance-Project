@@ -19,6 +19,9 @@ const canvas = document.querySelector('.webgl')
 
 const scene = new THREE.Scene()
 
+const video = document.querySelector('.video')
+const videoTexture = new THREE.VideoTexture(video)
+
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight
@@ -100,6 +103,9 @@ geometry.setAttribute('opacity', new THREE.BufferAttribute(opacity, 1));
 material = new THREE.ShaderMaterial({
   vertexShader: vertexShader,
   fragmentShader: fragmentShader,
+  uniforms: {
+    uTexture: { value: videoTexture },
+  },
   transparent: true,
   depthTest: true,
   depthWrite: true,
