@@ -35,7 +35,7 @@ export default class Experience {
     this.camera = new Camera()
     this.renderer = new Renderer()
     this.world = new World()
-    //this.ar = new AR()
+    this.ar = new AR()
 
 
     //resize event
@@ -51,7 +51,7 @@ export default class Experience {
 
   resize() {
     this.camera.resize()
-    this.ar.resize()
+    // this.ar.resize()
     this.renderer.resize()
   }
 

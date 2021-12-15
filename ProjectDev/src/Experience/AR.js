@@ -10,14 +10,6 @@ export default class AR {
     this.canvas = this.experience.canvas
     this.camera = this.experience.camera
 
-    this.setArToolKitSource()
-    this.createArToolKitContext()
-    this.resize()
-    this.createMarkerControls()
-
-  }
-  setArToolKitSource() {
-    // setup arToolkitSource
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
       sourceWidth: this.sizes.height,
@@ -26,37 +18,53 @@ export default class AR {
       displayHeight: this.sizes.height,
     });
 
-    this.arToolkitSource.init(function onReady() {
-      this.resize()
-    })
-  }
+    console.log('hi1');
 
-    // create atToolkitContext
-    createArToolKitContext() {
+
     this.arToolkitContext = new THREEx.ArToolkitContext({
       cameraParametersUrl: 'camera_para.dat', //from https://github.com/jeromeetienne/AR.js/blob/master/data/data/camera_para.dat
       detectionMode: 'mono',
     })
-  
 
-    this.arToolkitContext.init(function onCompleted() {
+    this.markerRoot = new THREE.Group();
+    this.scene.add(this.markerRoot);
+
+    this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
+      type: 'pattern',
+      patternUrl: "pattern-marker.patt",
+    })
+
+
+
+    this.setArToolKitSource()
+    this.createArToolKitContext()
+    
+  }
+
+  setArToolKitSource() {
+    
+    // setup arToolkitSource
+    this.arToolkitSource.init(() => {
+      console.log('hi2');
+      this.onResize()
+    })
+  }
+
+  // create atToolkitContext
+  createArToolKitContext() {
+    console.log('hi3');
+    this.arToolkitContext.init(function onCompleted(this) {
+      console.log('hi4');
+    
       this.camera.projectionMatrix.copy(this.arToolkitContext.getProjectionMatrix());
     })
   }
 
-    // build markerControls
-    createMarkerControls() {
-    this.markerRoot = new THREE.Group();
-    this.scene.add(this.markerRoot);
+  // build markerControls
 
-     this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
-      type: 'pattern',
-      patternUrl: "pattern-marker.patt",
-    })
-  }
 
-  resize() {
-    this.arToolkitSource.resize()
+  onResize() {
+    this.arToolkitSource.onResize()
     this.arToolkitSource.copySizeTo(this.canvas)
     if (this.arToolkitContext.arController !== null) {
       this.arToolkitSource.copySizeTo(this.arToolkitContext.arController.canvas)
