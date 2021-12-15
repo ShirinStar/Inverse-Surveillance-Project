@@ -2,16 +2,15 @@ import * as THREE from 'three'
 import vertexShader from '../shader/vertexPoint.glsl';
 import fragmentShader from '../shader/fragment.glsl';
 import Experience from "../Experience.js";
+import AR from '../AR.js'
 
 const video = document.querySelector('.video')
 const videoTexture = new THREE.VideoTexture(video)
 
-export default class VideoMesh {
+export default class VideoMesh extends AR{
   constructor() {
-    this.experience = new Experience()
-    this.scene = this.experience.scene
-    this.resources = this.experience.resources
-
+    super()
+ 
     this.setGeometry()
     this.setMaterial()
     this.setMesh()
@@ -39,6 +38,7 @@ export default class VideoMesh {
     this.mesh = new THREE.Points(this.geometry, this.material);
     // this.mesh.position.y = 0.5;
     // this.mesh.rotation.x = -90;
-    this.scene.add(this.mesh)
+    this.markerRoot.add(this.mesh)
+    // this.scene.add(this.mesh)
   }
 }

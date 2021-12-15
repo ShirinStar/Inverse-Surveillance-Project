@@ -15,7 +15,7 @@ export default class Experience {
   constructor(canvas) {
 
     //checking if the scene was instantiated already
-    if(instance) {
+    if (instance) {
       return instance
     }
 
@@ -43,27 +43,45 @@ export default class Experience {
       this.resize()
     })
 
+
+
+//check timing 
+// check marker init
+    const clock = new THREE.Clock()
+
+    const animate = () => {
+      const elapsedTime = clock.getElapsedTime()
+      requestAnimationFrame(animate);
+      this.update();
+    }
+
+    animate()
+
     //time tick event
-    this.time.on('tick', () => {
-      this.update()
-    })
+    // this.time.on('tick', () => {
+    //   this.update()
+    // })
   }
+
+
 
   resize() {
     this.camera.resize()
-    // this.ar.resize()
+    this.ar.resize()
     this.renderer.resize()
   }
 
+
   update() {
     this.camera.update()
+    this.ar.update()
     this.world.update()
     this.renderer.update()
   }
 
-  destroy() {
-    this.sizes.off('resize')
-    this.time.off('tick')
-  }
+  // destroy() {
+  //   this.sizes.off('resize')
+  //   this.time.off('tick')
+  // }
 
 }

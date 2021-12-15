@@ -12,13 +12,14 @@ export default class AR {
 
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
-      sourceWidth: this.sizes.height,
-      sourceHeight: this.sizes.width,
+      //phone
+      // sourceWidth: this.sizes.height,
+      // sourceHeight: this.sizes.width,
+
       displayWidth: this.sizes.width,
       displayHeight: this.sizes.height,
     });
 
-    console.log('hi1');
 
 
     this.arToolkitContext = new THREEx.ArToolkitContext({
@@ -35,39 +36,40 @@ export default class AR {
     })
 
 
-
     this.setArToolKitSource()
     this.createArToolKitContext()
+    this.update()
     
   }
 
   setArToolKitSource() {
-    
     // setup arToolkitSource
     this.arToolkitSource.init(() => {
-      console.log('hi2');
       this.onResize()
     })
   }
 
   // create atToolkitContext
   createArToolKitContext() {
-    console.log('hi3');
-    this.arToolkitContext.init(function onCompleted(this) {
-      console.log('hi4');
-    
+    this.arToolkitContext.init(() => {    
       this.camera.projectionMatrix.copy(this.arToolkitContext.getProjectionMatrix());
     })
   }
 
   // build markerControls
-
-
   onResize() {
     this.arToolkitSource.onResize()
     this.arToolkitSource.copySizeTo(this.canvas)
     if (this.arToolkitContext.arController !== null) {
       this.arToolkitSource.copySizeTo(this.arToolkitContext.arController.canvas)
+    }
+  }
+
+  update() {
+      // update artoolkit on every frame
+      console.log(this.arToolkitSource.ready);
+      if (this.arToolkitSource.ready !== false) {
+        this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
   }
 }
