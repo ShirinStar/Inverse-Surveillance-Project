@@ -7,7 +7,7 @@ import Experience from "../Experience.js";
 const video = document.querySelector('.video')
 const videoTexture = new THREE.VideoTexture(video)
 
-export default class VideoMesh {
+export default class VideoNoise {
   constructor() {
     this.experience = new Experience()
     this.sizes = this.experience.sizes
