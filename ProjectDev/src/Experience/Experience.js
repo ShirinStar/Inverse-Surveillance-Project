@@ -35,7 +35,6 @@ export default class Experience {
     this.renderer = new Renderer()
     this.world = new World()
 
-    console.log(this.world);
 
     //resize event
     this.sizes.on('resize', () => {
@@ -50,14 +49,14 @@ export default class Experience {
       requestAnimationFrame(animate);
       this.update();
     }
-
     animate()
   }
 
 
   resize() {
     this.camera.resize()
-    // this.ar.resize()
+    //the world holds the onResize of the arjs
+    this.world.resize()
     this.renderer.resize()
   }
 

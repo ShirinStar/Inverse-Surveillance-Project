@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import AR from '../AR.js';
 import Experience from "../Experience.js";
 import Environment from './Environment.js';
-import Video from './Video.js';
+import Content from './Content.js';
 
 export default class World {
   constructor() {
@@ -20,13 +20,18 @@ export default class World {
  
     this.resources.on('ready', () => {
       //the ar is holding the scene content ->
-      //it is an extend to the video and then using markerRoor is adding the content
+      //it is an extend to the Content and then using markerRoor is adding the content
       this.ar = new AR()
       this.environment = new Environment()
+      
     })
   }
 
   update() {
     this.ar.update()
+  }
+
+  resize() {
+   this.ar.onResize()
   }
 }

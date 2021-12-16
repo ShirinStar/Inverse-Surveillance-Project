@@ -1,28 +1,21 @@
 import * as THREE from 'three'
-import Experience from "./Experience.js";
+import Content from './World/Content.js';
 import Video from './World/Video.js'
 
-export default class AR extends Video {
+export default class AR extends Content {
   constructor() {
     super()
 
-    // this.experience = new Experience()
-    // this.sizes = this.experience.sizes
-    // this.scene = this.experience.scene
-    // this.canvas = this.experience.canvas
-    // this.camera = this.experience.camera
-
-
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
-      //phone
+     
       sourceWidth: window.innerHeight,
       sourceHeight: window.innerWidth,
+      
       displayWidth: window.innerWidth,
       displayHeight: window.innerHeight,
     });
-
-
+    
     this.arToolkitContext = new THREEx.ArToolkitContext({
       cameraParametersUrl: 'camera_para.dat', //from https://github.com/jeromeetienne/AR.js/blob/master/data/data/camera_para.dat
       detectionMode: 'mono',
@@ -36,16 +29,16 @@ export default class AR extends Video {
       patternUrl: "pattern-marker.patt",
     })
 
-    this.markerRoot.add(this.mesh)
+
+    this.markerRoot.add(this.video.videoNoiseMesh)
 
     this.setArToolKitSource()
     this.createArToolKitContext()
-    this.update()
 
   }
-
-  setArToolKitSource() {
-    // setup arToolkitSource
+  
+ // setup arToolkitSource
+  setArToolKitSource() {   
     this.arToolkitSource.init(() => {
       this.onResize()
     })
