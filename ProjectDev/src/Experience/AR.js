@@ -1,25 +1,26 @@
 import * as THREE from 'three'
 import Experience from "./Experience.js";
+import Video from './World/Video.js'
 
-export default class AR {
+export default class AR extends Video {
   constructor() {
+    super()
 
-    this.experience = new Experience()
-    this.sizes = this.experience.sizes
-    this.scene = this.experience.scene
-    this.canvas = this.experience.canvas
-    this.camera = this.experience.camera
+    // this.experience = new Experience()
+    // this.sizes = this.experience.sizes
+    // this.scene = this.experience.scene
+    // this.canvas = this.experience.canvas
+    // this.camera = this.experience.camera
+
 
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
       //phone
-      // sourceWidth: this.sizes.height,
-      // sourceHeight: this.sizes.width,
-
-      displayWidth: this.sizes.width,
-      displayHeight: this.sizes.height,
+      sourceWidth: window.innerHeight,
+      sourceHeight: window.innerWidth,
+      displayWidth: window.innerWidth,
+      displayHeight: window.innerHeight,
     });
-
 
 
     this.arToolkitContext = new THREEx.ArToolkitContext({
@@ -35,11 +36,12 @@ export default class AR {
       patternUrl: "pattern-marker.patt",
     })
 
+    this.markerRoot.add(this.mesh)
 
     this.setArToolKitSource()
     this.createArToolKitContext()
     this.update()
-    
+
   }
 
   setArToolKitSource() {
@@ -51,7 +53,7 @@ export default class AR {
 
   // create atToolkitContext
   createArToolKitContext() {
-    this.arToolkitContext.init(() => {    
+    this.arToolkitContext.init(() => {
       this.camera.projectionMatrix.copy(this.arToolkitContext.getProjectionMatrix());
     })
   }
@@ -66,10 +68,9 @@ export default class AR {
   }
 
   update() {
-      // update artoolkit on every frame
-      console.log(this.arToolkitSource.ready);
-      if (this.arToolkitSource.ready !== false) {
-        this.arToolkitContext.update(this.arToolkitSource.domElement)
+    // update artoolkit on every frame
+    if (this.arToolkitSource.ready !== false) {
+      this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
   }
 }

@@ -7,7 +7,6 @@ import World from './World/World.js'
 import Resources from './Utils/Resources.js'
 import sources from './sources.js'
 import Debug from './Utils/Debug.js'
-import AR from './AR.js'
 
 let instance = null
 
@@ -35,18 +34,15 @@ export default class Experience {
     this.camera = new Camera()
     this.renderer = new Renderer()
     this.world = new World()
-    this.ar = new AR()
 
+    console.log(this.world);
 
     //resize event
     this.sizes.on('resize', () => {
       this.resize()
     })
 
-
-
-//check timing 
-// check marker init
+    //animation
     const clock = new THREE.Clock()
 
     const animate = () => {
@@ -56,25 +52,19 @@ export default class Experience {
     }
 
     animate()
-
-    //time tick event
-    // this.time.on('tick', () => {
-    //   this.update()
-    // })
   }
-
 
 
   resize() {
     this.camera.resize()
-    this.ar.resize()
+    // this.ar.resize()
     this.renderer.resize()
   }
 
 
   update() {
     this.camera.update()
-    this.ar.update()
+    //the world is updating the ar
     this.world.update()
     this.renderer.update()
   }

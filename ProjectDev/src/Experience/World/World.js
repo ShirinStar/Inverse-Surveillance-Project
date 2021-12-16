@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import AR from '../AR.js';
 import Experience from "../Experience.js";
 import Environment from './Environment.js';
 import Video from './Video.js';
@@ -15,15 +16,17 @@ export default class World {
     // )
 
     // this.scene.add(testMesh)
-
+    
+ 
     this.resources.on('ready', () => {
-      //setup
-      this.video = new Video()
+      //the ar is holding the scene content ->
+      //it is an extend to the video and then using markerRoor is adding the content
+      this.ar = new AR()
       this.environment = new Environment()
     })
   }
 
   update() {
-  
+    this.ar.update()
   }
 }
