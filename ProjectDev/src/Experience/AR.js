@@ -26,7 +26,9 @@ export default class AR extends Content {
 
     this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
       type: 'pattern',
-      patternUrl: "pattern-marker.patt",
+      patternUrl: "pattern-lightGreyThree.patt", 
+      //https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
+      //make sure bg color is light grey 240 240 240
     })
 
 

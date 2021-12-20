@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import AR from '../AR.js';
 import Experience from "../Experience.js";
 import Environment from './Environment.js';
-import Content from './Content.js';
+import Tatreez from './Tatreez.js';
 
 export default class World {
   constructor() {
@@ -22,13 +22,14 @@ export default class World {
       //the ar is holding the scene content ->
       //it is an extend to the Content and then using markerRoor is adding the content
       this.ar = new AR()
+      this.tatreez = new Tatreez()
       this.environment = new Environment()
       
     })
   }
 
   update() {
-    this.ar.update()
+    //this.ar.update()
   }
 
   resize() {
