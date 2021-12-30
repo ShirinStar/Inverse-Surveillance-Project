@@ -23,6 +23,7 @@ export default class AR extends Content {
 
     this.markerRoot = new THREE.Group();
     this.scene.add(this.markerRoot);
+    this.scene.add(this.tatreez)
 
     this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
       type: 'pattern',
@@ -67,5 +68,6 @@ export default class AR extends Content {
     if (this.arToolkitSource.ready !== false) {
       this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
+    this.tatreez.updateTrails()
   }
 }

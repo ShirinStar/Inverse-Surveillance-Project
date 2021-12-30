@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import vertexShader from '../shader/vertexPoint.glsl';
-import fragmentShader from '../shader/fragment.glsl';
+import vertexShader from '../shaders/vertexVideoNoise.glsl';
+import fragmentShader from '../shaders/fragmentVideoNoise.glsl';
 import Experience from "../Experience.js";
 
 

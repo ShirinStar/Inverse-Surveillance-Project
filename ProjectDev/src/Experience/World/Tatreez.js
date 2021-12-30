@@ -1,15 +1,8 @@
 import * as THREE from 'three'
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
+import vertexShader from '../shaders/tatreezVertex.glsl';
+import fragmentShader from '../shaders/tatreezFragment.glsl';
 import Experience from "../Experience.js";
 
-
-let SVGMesh;
-let geometry;
-let material;
-let positions;
-let opacity;
-let lines = [];
-const SVGViewBox = 512;
 
 export default class Tatreez {
   constructor() {
@@ -18,81 +11,105 @@ export default class Tatreez {
     this.scene = this.experience.scene
     this.canvas = this.experience.canvas
 
-    this.loader = new SVGLoader();
-    this.ready = false
-    //   const testMesh = new THREE.Mesh(
-    //   new THREE.BoxGeometry(1, 1, 1),
-    //   new THREE.MeshStandardMaterial()
-    // )
-
-    // this.scene.add(testMesh)
+    this.SVGMesh = null;
+    this.geometry;
+    this.material;
+    this.positions;
+    this.opacity;
+    this.lines = [];
+    this.SVGViewBox = 100;
 
     this.loadSVG()
-
+    this.updateTrails()
   }
 
   loadSVG() {
-    this.loader.load(
-      // resource URL
-      'tatreez/threeShapeSecond.svg',
-      // called when the resource is loaded
-      function ( data ) {
-        
-        const paths = data.paths;
+    this.svg = [...document.querySelectorAll('.tatreez1')]
 
-        console.log(paths);
-        
-        let points = []
+    this.svg.forEach((path, j) => {
+      this.len = path.getTotalLength()
+      this.numberOfPoints = Math.floor(this.len / 2)
 
-        let maxPoints = paths.length * 100;
-         positions = []
-         opacity = new Float32Array(maxPoints)
-    
-        //accessing the x,y of tthe path and pushing them to the array
-        paths.forEach(line => {
-          line.subPaths.forEach(currentPoint => {
-            points.push(
-              new THREE.Vector3(
-                currentPoint.currentPoint.x,
-                currentPoint.currentPoint.y,
-                0
-              )
-            )
-          })
-        })
+      this.points = []
 
-        points.forEach(point => {
-          positions.push(point.x, point.y, point.z)
-        })
+      for (let i = 0; i < this.numberOfPoints; i++) {
+        this.pointAt = this.len * i / this.numberOfPoints //this will change based on the length and total number of the path
+        this.onePoint = path.getPointAtLength(this.pointAt)
+        this.randX = (Math.random() - 0.5) * 2
+        this.randY = (Math.random() - 0.5) * 2
+        this.randZ = (Math.random() - 0.5) * 4
 
-        geometry = new THREE.BufferGeometry()
-        geometry.setAttribute('position', 
-        new THREE.BufferAttribute(new Float32Array(positions), 3))
-
-        material = new THREE.MeshBasicMaterial()
-
-        SVGMesh = new THREE.Mesh(geometry, material)
-
-        // can't load the mesh to the scene -> open new project and do it there. 
-       
-      },
-      // called when loading is in progresses
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-      
-      },
-    
-      function (error) {
-        console.log('An error happened');
-    
+        this.points.push(new THREE.Vector3(
+          this.onePoint.x - this.SVGViewBox / 2,
+          this.onePoint.y - this.SVGViewBox / 2,
+          0))
       }
-    );
 
- 
-    /////
+      this.lines.push({
+        id: j,
+        path: path,
+        length: this.len,
+        number: this.numberOfPoints,
+        points: this.points,
+        currentPos: 0,
+        speed: 1
+      })
 
-    }    
+      this.maxPoints = this.points.length * 50;
 
+      this.positions = new Float32Array(this.maxPoints * 3)
+      this.opacity = new Float32Array(this.maxPoints)
+    })
+
+    this.geometry = new THREE.BufferGeometry()
+    this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+    this.geometry.setAttribute('opacity', new THREE.BufferAttribute(this.opacity, 1));
+
+    this.material = new THREE.ShaderMaterial({
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      // uniforms: {
+      //   uTexture: { value: videoTexture },
+      // },
+      transparent: true,
+      depthTest: true,
+      depthWrite: true,
+      // alphaTest: 0.001,
+      blending: THREE.AdditiveBlending
+    })
+
+    this.SVGMesh = new THREE.Points(this.geometry, this.material)
+
+    this.SVGMesh.rotation.z = Math.PI
+    this.scene.add(this.SVGMesh)
+
+  }
+
+  //animationg particles path
+  updateTrails() {
+    let j = 0;
+
+    //accesing the object that was created with the svg load
+    this.lines.forEach(line => {
+      line.currentPos += line.speed
+      line.currentPos = line.currentPos % line.number // keeping them inset ;
+
+      //showwing only 100 particles at a time
+      for (let i = 0; i < 300; i++) {
+        this.index = (line.currentPos + i) % line.number
+        this.showPoint = line.points[this.index]
+        //using additional index to loop over the path
+        this.positions.set([this.showPoint.x, this.showPoint.y, this.showPoint.z], j * 3)
+        this.opacity.set([i / 1500], j)
+        j++
+      }
+    })
+    //updating
+    if (this.SVGMesh !== null) {
+      this.SVGMesh.geometry.attributes.position.array = this.positions
+      this.SVGMesh.geometry.attributes.position.needsUpdate = true;
+    }
+  }
 
 }
 

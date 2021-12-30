@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import Experience from "../Experience.js";
+import Tatreez from './Tatreez.js';
 import Video from './Video.js'
 
 export default class Content {
@@ -11,6 +12,8 @@ export default class Content {
     this.camera = this.experience.camera
 
     this.video = new Video()
+
+    this.tatreez = new Tatreez()
  
   }
 }

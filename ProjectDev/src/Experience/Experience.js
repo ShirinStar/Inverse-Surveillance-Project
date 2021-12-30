@@ -63,7 +63,7 @@ export default class Experience {
 
   update() {
     this.camera.update()
-    //the world is updating the ar
+    //the world is updating the ar -> ar updates the content
     this.world.update()
     this.renderer.update()
   }
