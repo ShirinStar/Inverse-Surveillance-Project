@@ -68,10 +68,12 @@ export default class Tatreez {
     this.material = new THREE.ShaderMaterial({
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
-      // uniforms: {
-      //   uTexture: { value: videoTexture },
-      // },
+      uniforms: {
+        //uTexture: { value: videoTexture },
+        uOpacity: {value: 1}
+      },
       transparent: true,
+      opacity: 1,
       depthTest: true,
       depthWrite: true,
       // alphaTest: 0.001,
@@ -81,7 +83,9 @@ export default class Tatreez {
     this.SVGMesh = new THREE.Points(this.geometry, this.material)
 
     this.SVGMesh.rotation.z = Math.PI
-    this.scene.add(this.SVGMesh)
+    this.SVGMesh.scale.set(0.01, 0.01, 0.01)
+   
+    //this.scene.add(this.SVGMesh)
 
   }
 
@@ -109,6 +113,13 @@ export default class Tatreez {
       this.SVGMesh.geometry.attributes.position.array = this.positions
       this.SVGMesh.geometry.attributes.position.needsUpdate = true;
     }
+  }
+
+  onDestroy() {
+    
+    this.geometry.destroy()
+    this.material.destroy()
+    console.log('tatreez destroy');
   }
 
 }

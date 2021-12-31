@@ -1,6 +1,6 @@
 import * as THREE from 'three'
+import gsap from 'gsap';
 import Content from './World/Content.js';
-import Video from './World/Video.js'
 
 export default class AR extends Content {
   constructor() {
@@ -8,14 +8,14 @@ export default class AR extends Content {
 
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
-     
+
       sourceWidth: window.innerHeight,
       sourceHeight: window.innerWidth,
-      
+
       displayWidth: window.innerWidth,
       displayHeight: window.innerHeight,
     });
-    
+
     this.arToolkitContext = new THREEx.ArToolkitContext({
       cameraParametersUrl: 'camera_para.dat', //from https://github.com/jeromeetienne/AR.js/blob/master/data/data/camera_para.dat
       detectionMode: 'mono',
@@ -23,11 +23,11 @@ export default class AR extends Content {
 
     this.markerRoot = new THREE.Group();
     this.scene.add(this.markerRoot);
-    this.scene.add(this.tatreez)
+
 
     this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
       type: 'pattern',
-      patternUrl: "pattern-lightGreyThree.patt", 
+      patternUrl: "pattern-lightGreyThree.patt",
       //https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
       //make sure bg color is light grey 240 240 240
     })
@@ -38,10 +38,17 @@ export default class AR extends Content {
     this.setArToolKitSource()
     this.createArToolKitContext()
 
+    this.count = 0;
+    this.scene.add(this.tatreez.SVGMesh)
+
+    this.toPlay()
+    this.animatePlayBtn()
+    this.canvas.addEventListener('touchstart', this.onTouch.bind(this))
   }
-  
- // setup arToolkitSource
-  setArToolKitSource() {   
+
+
+  // setup arToolkitSource
+  setArToolKitSource() {
     this.arToolkitSource.init(() => {
       this.onResize()
     })
@@ -70,4 +77,63 @@ export default class AR extends Content {
     }
     this.tatreez.updateTrails()
   }
+
+  //temp play icon- might be best to move to another class
+  toPlay() {
+    this.playGeo = new THREE.BufferGeometry();
+    const vertices = new Float32Array( [
+       0,  0, 1,
+      -.5,  .5, 1,
+      -.5, -.5, 1
+    ] );
+    this.playGeo.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    this.playMat = new THREE.MeshBasicMaterial( { 
+      color: 0xff0000,
+      transparent: true,
+      opacity: 0
+    } )
+    this.playMesh = new THREE.Mesh(this.playGeo, this.playMat);
+    this.playMesh.scale.set(0.5, 0.5, 0.5)
+    this.playMesh.position.x = 0
+    this.scene.add(this.playMesh);
+  }
+
+  //aadd video with touch
+  onTouch() {
+    this.cube = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(1, 1),
+      new THREE.MeshBasicMaterial()
+    )
+    this.count++
+
+    if (this.count === 1) {
+      this.scene.add(this.cube)
+    }
+    //make sure you add and remove btn correcly
+    this.scene.remove(this.playMesh)
+  }
+
+  ///
+  animatePlayBtn() {
+    gsap.to(this.tatreez.material.uniforms.uOpacity, {
+      delay: 5,
+      duration: 1,
+      value: 0,
+      onComplete: () => {
+        //how to bind this
+        this.tatreez.onDestroy()
+        this.scene.remove(this.tatreez.SVGMesh)
+        console.log('run?');
+      }
+    })
+    gsap.to(this.playMesh.material, {
+      delay: 8,
+      duration: 4,
+      opacity: 1,
+      onComplete: () => {
+        console.log('allow touch');
+      }
+    })
+  }
+
 }

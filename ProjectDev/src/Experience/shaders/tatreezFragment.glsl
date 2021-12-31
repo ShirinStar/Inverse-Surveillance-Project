@@ -1,4 +1,5 @@
 //uniform sampler2D uTexture;
+uniform float uOpacity;
 
 varying vec2 vUv;
 varying float vOpacity;
@@ -24,7 +25,7 @@ void main()
   float disc = length(centralUv );
 
   gl_FragColor = vec4(1.0 - disc, 0.0, 0.0, 1.0 )* vOpacity;
-  gl_FragColor = vec4(color.rgb, color.a);
+  gl_FragColor = vec4(color.rgb, color.a * uOpacity);
  
   if(gl_FragColor.r<0.1 && gl_FragColor.b<0.1 && gl_FragColor.g<0.1) discard;
 
