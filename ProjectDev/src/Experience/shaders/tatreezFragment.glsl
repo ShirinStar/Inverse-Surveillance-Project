@@ -19,18 +19,16 @@ void main()
 
   color *= vOpacity;
 
-  color.a = min(1.0, color.a) * 20.0;
-
-  //float disc = length(centralUv * 2.0);
+  color.a = min(1.0, color.a) * 120.0;
 
 
-  //shaping circle particles
-  float strength = step(0.5, distance(uv, vec2(0.5)) );
+  //shaping circle particles - if i want to make them smaller i can add a bigger number
+  float strength = step(0.5, distance(uv, vec2(0.5)) - 0.025);
 
   //adding video color
   vec3 mixedColor = mix(videoTexture.rgb, color.rgb, strength);
 
-  gl_FragColor = vec4(vec3(mixedColor * 1.3), color.a * 2.0);
+  gl_FragColor = vec4(vec3(mixedColor * 1.35), color.a);
 
   if(gl_FragColor.r<0.1 && gl_FragColor.b<0.1 && gl_FragColor.g<0.1) discard;
 }
