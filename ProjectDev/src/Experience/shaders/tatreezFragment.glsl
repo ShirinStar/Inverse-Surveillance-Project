@@ -25,12 +25,12 @@ void main()
 
 
   //shaping circle particles
-  float strength = step(0.5, distance(uv, vec2(0.5)) + vOpacity / 6.0);
+  float strength = step(0.5, distance(uv, vec2(0.5)) + vOpacity / 10.0);
 
   //adding video color
   vec3 mixedColor = mix(videoTexture.rgb, color.rgb, strength);
 
-  gl_FragColor = vec4(vec3(mixedColor * 1.25), 1.0 + vOpacity / 2.0) * vOpacity;
+  gl_FragColor = vec4(vec3(mixedColor * 1.25), 1.0 + vOpacity / 2.0) ;
 
   if(gl_FragColor.r<0.1 && gl_FragColor.b<0.1 && gl_FragColor.g<0.1) discard;
 }

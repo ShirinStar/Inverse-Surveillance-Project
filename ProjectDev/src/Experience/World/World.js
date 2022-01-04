@@ -22,7 +22,7 @@ export default class World {
       //the ar is holding the scene content ->
       //it is an extend to the Content and then using markerRoor is adding the content
       //this.ar = new AR()
-      this.Tatreez = new Tatreez()
+      this.tatreez = new Tatreez()
       this.environment = new Environment()
       
     })
@@ -30,6 +30,7 @@ export default class World {
 
   update() {
     //this.ar.update()
+    this.tatreez.updateTrails()
 
   }
 

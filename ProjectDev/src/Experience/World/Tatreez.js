@@ -21,8 +21,8 @@ export default class Tatreez {
     this.SVGMesh = null;
     this.geometry;
     this.material;
-    this.positions = []
-    this.opacity = []
+    this.positions;
+    this.opacity;
     this.lines = [];
     this.SVGViewBox = 100;
 
@@ -63,28 +63,31 @@ export default class Tatreez {
         speed: 1
       })
 
-      this.maxPoints = this.points.length * 100;
+      this.maxPoints = this.points.length * 200;
+
+      this.positions = new Float32Array(this.maxPoints * 3)
+      this.opacity = new Float32Array(this.maxPoints)
 
       // for(let i =0 ; i < this.maxPoints; i++) {
-      //   this.opacity.push(Math.random())
-      //   this.positions.push(Math.random() * 100, Math.random() * 1000, 0 )
+      //   this.opacity.set([Math.random()], i)
+      //   this.positions.set([Math.random() * 100, Math.random() * 1000, 0], i * 3 )
       // }
 
-
-      this.lines.forEach(line => {
-        line.points.forEach(singlePoint => {
-          this.positions.push(singlePoint.x, singlePoint.y, singlePoint.z)
-          this.opacity.push(Math.random())
-        })
-      })
+      //uncomment this instead of the loop to draw the svg
+      // this.lines.forEach(line => {
+      //   line.points.forEach(singlePoint => {
+      //     this.positions.push(singlePoint.x, singlePoint.y, singlePoint.z)
+      //     this.opacity.push(Math.random())
+      //   })
+      // })
     })
 
     this.geometry = new THREE.BufferGeometry()
-    this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.positions), 3))
-    this.geometry.setAttribute('opacity', new THREE.BufferAttribute(new Float32Array(this.opacity), 1))
+    // this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.positions), 3))
+    // this.geometry.setAttribute('opacity', new THREE.BufferAttribute(new Float32Array(this.opacity), 1))
 
-    // this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
-    // this.geometry.setAttribute('opacity', new THREE.BufferAttribute(this.opacity, 1));
+    this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+    this.geometry.setAttribute('opacity', new THREE.BufferAttribute(this.opacity, 1));
 
 
     this.material = new THREE.ShaderMaterial({
@@ -115,28 +118,28 @@ export default class Tatreez {
 
   //animationg particles path
   updateTrails() {
-  //   let j = 0;
+    let j = 0;
 
-  //   //accesing the object that was created with the svg load
-  //   this.lines.forEach(line => {
-  //     line.currentPos += line.speed
-  //     line.currentPos = line.currentPos % line.number // keeping them inset ;
+     //accesing the object that was created with the svg load
+    this.lines.forEach(line => {
+      line.currentPos += line.speed
+      line.currentPos = line.currentPos % line.number // keeping them inset ;
 
-  //     //showwing only 100 particles at a time
-  //     for (let i = 0; i < 300; i++) {
-  //       this.index = (line.currentPos + i) % line.number
-  //       this.showPoint = line.points[this.index]
-  //       //using additional index to loop over the path
-  //       this.positions.set([this.showPoint.x, this.showPoint.y, this.showPoint.z], j * 3)
-  //       this.opacity.set([i / 1500], j)
-  //       j++
-  //     }
-  //   })
+       //showing only 100 particles at a time
+      for (let i = 0; i < 300; i++) {
+        this.index = (line.currentPos + i) % line.number// keeping it in the range of max points
+        this.showPoint = line.points[this.index]
+        //using additional index to loop over the path
+        this.positions.set([this.showPoint.x, this.showPoint.y, this.showPoint.z], j * 3)
+        this.opacity.set([i / 500], j)
+        j++
+      }
+    })
   //   //updating
-  //   if (this.SVGMesh !== null) {
-  //     this.SVGMesh.geometry.attributes.position.array = this.positions
-  //     this.SVGMesh.geometry.attributes.position.needsUpdate = true;
-  //   }
+    if (this.SVGMesh !== null) {
+      this.SVGMesh.geometry.attributes.position.array = this.positions
+      this.SVGMesh.geometry.attributes.position.needsUpdate = true;
+    }
   }
 
   onDestroy() {
