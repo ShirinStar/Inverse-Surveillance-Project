@@ -6,6 +6,8 @@ export default class AR extends Content {
   constructor() {
     super()
 
+    this.count = 0;
+
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
 
@@ -24,7 +26,6 @@ export default class AR extends Content {
     this.markerRoot = new THREE.Group();
     this.scene.add(this.markerRoot);
 
-
     this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
       type: 'pattern',
       patternUrl: "pattern-lightGreyThree.patt",
@@ -32,19 +33,14 @@ export default class AR extends Content {
       //make sure bg color is light grey 240 240 240
     })
 
-
-    this.markerRoot.add(this.video.videoNoiseMesh)
+    this.markerRoot.add(this.video.videoNoiseMesh)   
+    this.scene.add(this.tatreez.SVGMesh)
 
     this.setArToolKitSource()
     this.createArToolKitContext()
-
-    this.count = 0;
-    this.scene.add(this.tatreez.SVGMesh)
-
-    // this.animatePlayBtn()
+    this.animateTatreezTransition()
     this.canvas.addEventListener('touchstart', this.onTouch.bind(this))
   }
-
 
   // setup arToolkitSource
   setArToolKitSource() {
@@ -75,11 +71,12 @@ export default class AR extends Content {
       this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
     this.tatreez.updateTrails()
+    this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true
   }
 
 
 
-  //aadd video with touch
+  //add video with touch
   onTouch() {
     this.cube = new THREE.Mesh(
       new THREE.BoxBufferGeometry(1, 1),
@@ -95,7 +92,36 @@ export default class AR extends Content {
   }
 
   ///
-  // animatePlayBtn() {
+  animateTatreezTransition() {
+    //change number of rendered particles to create  an interesting transition to video 
+    //1. work on number of paarticles
+    //2.work on opacity
+    //3. check changing particles size? 
+    //4. then transiittion in the video... 
+    //5. remove tatreez from scene
+    //6. add video to the scene in the position of the marker? camera? 
+    
+    // gsap.to(this.tatreez, {
+    //   delay: 5,
+    //   duration: 20, 
+    //   numberOfRenderedParticles: 100,
+    // })
+    // gsap.to(this.tatreez, {
+    //   delay: 20,
+    //   duration: 5, 
+    //   changingOpacity: 1200
+    // })
+    // gsap.to(this.tatreez, {
+    //   delay: 5,
+    //   duration: 1,
+    //   changeRandomX: 100,
+    //   onComplete: () => {
+    //     this.tatreez.SVGMesh.geometry.attributes.position.array = this.tatreez.positions
+    //     this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true;
+    //   }
+    // })
+  }
+  // animateTatreezTransition() {
   //   gsap.to(this.tatreez.material.uniforms.uOpacity, {
   //     delay: 5,
   //     duration: 1,

@@ -27,6 +27,7 @@ export default class Tatreez {
     this.SVGViewBox = 100;
   
     this.numberOfRenderedParticles = 100;
+    this.changingOpacity = 400;
     this.changeRandomX = 0;
     this.changeRandomY = 0;
     this.changeRandomZ = 0;
@@ -134,7 +135,7 @@ export default class Tatreez {
         this.showPoint = line.points[this.index]
         //using additional index to loop over the path
         this.positions.set([this.showPoint.x, this.showPoint.y, this.showPoint.z], j * 3)
-        this.opacity.set([i / 400], j)
+        this.opacity.set([i / this.changingOpacity], j)
         j++
       }
     })
