@@ -42,7 +42,7 @@ export default class AR extends Content {
     this.scene.add(this.tatreez.SVGMesh)
 
     this.toPlay()
-    this.animatePlayBtn()
+    // this.animatePlayBtn()
     this.canvas.addEventListener('touchstart', this.onTouch.bind(this))
   }
 
@@ -75,7 +75,7 @@ export default class AR extends Content {
     if (this.arToolkitSource.ready !== false) {
       this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
-    this.tatreez.updateTrails()
+    //this.tatreez.updateTrails()
   }
 
   //temp play icon- might be best to move to another class
@@ -114,26 +114,26 @@ export default class AR extends Content {
   }
 
   ///
-  animatePlayBtn() {
-    gsap.to(this.tatreez.material.uniforms.uOpacity, {
-      delay: 5,
-      duration: 1,
-      value: 0,
-      onComplete: () => {
-        //how to bind this
-        this.tatreez.onDestroy()
-        this.scene.remove(this.tatreez.SVGMesh)
-        console.log('run?');
-      }
-    })
-    gsap.to(this.playMesh.material, {
-      delay: 8,
-      duration: 4,
-      opacity: 1,
-      onComplete: () => {
-        console.log('allow touch');
-      }
-    })
-  }
+  // animatePlayBtn() {
+  //   gsap.to(this.tatreez.material.uniforms.uOpacity, {
+  //     delay: 5,
+  //     duration: 1,
+  //     value: 0,
+  //     onComplete: () => {
+  //       //how to bind this
+  //       this.tatreez.onDestroy()
+  //       this.scene.remove(this.tatreez.SVGMesh)
+  //       console.log('run?');
+  //     }
+  //   })
+  //   gsap.to(this.playMesh.material, {
+  //     delay: 8,
+  //     duration: 4,
+  //     opacity: 1,
+  //     onComplete: () => {
+  //       console.log('allow touch');
+  //     }
+  //   })
+  // }
 
 }
