@@ -126,12 +126,12 @@ export default class Tatreez {
       line.currentPos = line.currentPos % line.number // keeping them inset ;
 
        //showing only 100 particles at a time
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < 200; i++) {
         this.index = (line.currentPos + i) % line.number// keeping it in the range of max points
         this.showPoint = line.points[this.index]
         //using additional index to loop over the path
         this.positions.set([this.showPoint.x, this.showPoint.y, this.showPoint.z], j * 3)
-        this.opacity.set([i / 500], j)
+        this.opacity.set([i / 800], j)
         j++
       }
     })
