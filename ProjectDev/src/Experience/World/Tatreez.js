@@ -22,12 +22,12 @@ export default class Tatreez {
     this.geometry;
     this.material;
     this.positions = []
-    this.opacity;
+    this.opacity = []
     this.lines = [];
     this.SVGViewBox = 100;
 
     this.loadSVG()
-    //this.updateTrails()
+    this.updateTrails()
   }
 
   loadSVG() {
@@ -63,22 +63,28 @@ export default class Tatreez {
         speed: 1
       })
 
-      // this.maxPoints = this.points.length * 50;
+      this.maxPoints = this.points.length * 100;
 
-      // this.positions = new Float32Array(this.maxPoints * 3)
-      // this.opacity = new Float32Array(this.maxPoints)
+      // for(let i =0 ; i < this.maxPoints; i++) {
+      //   this.opacity.push(Math.random())
+      //   this.positions.push(Math.random() * 100, Math.random() * 1000, 0 )
+      // }
+
 
       this.lines.forEach(line => {
         line.points.forEach(singlePoint => {
           this.positions.push(singlePoint.x, singlePoint.y, singlePoint.z)
+          this.opacity.push(Math.random())
         })
       })
     })
 
     this.geometry = new THREE.BufferGeometry()
     this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.positions), 3))
+    this.geometry.setAttribute('opacity', new THREE.BufferAttribute(new Float32Array(this.opacity), 1))
+
     // this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
-    //this.geometry.setAttribute('opacity', new THREE.BufferAttribute(this.opacity, 1));
+    // this.geometry.setAttribute('opacity', new THREE.BufferAttribute(this.opacity, 1));
 
 
     this.material = new THREE.ShaderMaterial({
@@ -93,9 +99,9 @@ export default class Tatreez {
       transparent: true,
       // alphaTest: 0.001,
       // opacity: 1,
-      // depthTest: true,
-      // depthWrite: true,
-      // blending: THREE.AdditiveBlending
+      depthTest: true,
+      depthWrite: true,
+      blending: THREE.AdditiveBlending
     })
 
     this.SVGMesh = new THREE.Points(this.geometry, this.material)
@@ -108,7 +114,7 @@ export default class Tatreez {
   }
 
   //animationg particles path
-  // updateTrails() {
+  updateTrails() {
   //   let j = 0;
 
   //   //accesing the object that was created with the svg load
@@ -131,7 +137,7 @@ export default class Tatreez {
   //     this.SVGMesh.geometry.attributes.position.array = this.positions
   //     this.SVGMesh.geometry.attributes.position.needsUpdate = true;
   //   }
-  // }
+  }
 
   onDestroy() {
     //not worrking 
