@@ -17,3 +17,20 @@
     this.playMesh.position.x = 0
     this.scene.add(this.playMesh);
   }
+
+  this.canvas.addEventListener('touchstart', this.onTouch.bind(this))
+
+   //add video with touch
+   function onTouch() {
+    this.cube = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(1, 1),
+      new THREE.MeshBasicMaterial()
+    )
+    this.count++
+
+    if (this.count === 1) {
+      this.scene.add(this.cube)
+    }
+    //make sure you add and remove btn correcly
+    this.scene.remove(this.playMesh)
+  }

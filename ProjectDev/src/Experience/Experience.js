@@ -35,7 +35,6 @@ export default class Experience {
     this.renderer = new Renderer()
     this.world = new World()
 
-
     //resize event
     this.sizes.on('resize', () => {
       this.resize()
@@ -46,6 +45,9 @@ export default class Experience {
 
     const animate = () => {
       const elapsedTime = clock.getElapsedTime()
+
+      this.world.ar.video.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.5
+
       requestAnimationFrame(animate);
       this.update();
     }

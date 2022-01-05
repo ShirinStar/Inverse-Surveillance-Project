@@ -33,13 +33,12 @@ export default class AR extends Content {
       //make sure bg color is light grey 240 240 240
     })
 
-    this.markerRoot.add(this.video.videoNoiseMesh)   
+    //this.markerRoot.add(this.video.videoNoiseMesh)   
     this.scene.add(this.tatreez.SVGMesh)
 
     this.setArToolKitSource()
     this.createArToolKitContext()
     this.animateTatreezTransition()
-    this.canvas.addEventListener('touchstart', this.onTouch.bind(this))
   }
 
   // setup arToolkitSource
@@ -71,97 +70,30 @@ export default class AR extends Content {
       this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
     this.tatreez.updateTrails()
-    this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true
-  }
+    // this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true
 
-
-
-  //add video with touch
-  onTouch() {
-    this.cube = new THREE.Mesh(
-      new THREE.BoxBufferGeometry(1, 1),
-      new THREE.MeshBasicMaterial()
-    )
-    this.count++
-
-    if (this.count === 1) {
-      this.scene.add(this.cube)
+    if(this.count === 1) {
+      this.scene.add(this.video.videoStitchMesh)
     }
-    //make sure you add and remove btn correcly
-    this.scene.remove(this.playMesh)
   }
 
-  ///
+//if markeroot is visible
   animateTatreezTransition() {
-    //change number of rendered particles to create  an interesting transition to video 
-    //1. work on number of particles
-    //2.work on opacity
-    //3. check changing point size? 
-    //4. then transition to the video... 
-    //5. remove tatreez from scene
-    //6. add video to the scene in the position of the marker? camera? 
-    //7. check with ar and markers. 
+  
+    //7. check with ar and markers. does the video stays in that position?
    
-    gsap.to(this.tatreez, {
-      delay: 15,
-      duration: 20, 
-      numberOfRenderedParticles: 350,
-    })
-    gsap.to(this.tatreez.material.uniforms.uRangePointsRandom, {
+    gsap.to(this, {
       delay: 10,
-      duration: 2, 
-      value: 1,
-    })
-    gsap.to(this.tatreez.material.uniforms.uPointSize, {
-      delay: 5,
-      duration: 10, 
-      value: 8.0,
-    })
-    gsap.to(this.tatreez.material.uniforms.uRangePointsRandom, {
-      delay: 15,
-      duration: 15, 
-      value: 10,
-    })
-    gsap.to(this.tatreez.material.uniforms.uPointSize, {
-      delay: 15,
-      duration: 30, 
-      value: 1.0,
+      count: 1,
       onComplete: () => {
-        this.tatreez.onDestroy()
-        //switch to markerRoot.remove
+        this.video.animateStitch()
+      }
+    })
+    gsap.to(this, {
+      delay: 40,
+      onComplete: () => {
         this.scene.remove(this.tatreez.SVGMesh)
       }
     })
-    // gsap.to(this.tatreez, {
-    //   delay: 5,
-    //   duration: 1,
-    //   changeRandomX: 100,
-    //   onComplete: () => {
-    //     this.tatreez.SVGMesh.geometry.attributes.position.array = this.tatreez.positions
-    //     this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true;
-    //   }
-    // })
   }
-  // animateTatreezTransition() {
-  //   gsap.to(this.tatreez.material.uniforms.uOpacity, {
-  //     delay: 5,
-  //     duration: 1,
-  //     value: 0,
-  //     onComplete: () => {
-  //       //how to bind this
-  //       this.tatreez.onDestroy()
-  //       this.scene.remove(this.tatreez.SVGMesh)
-  //       console.log('run?');
-  //     }
-  //   })
-  //   gsap.to(this.playMesh.material, {
-  //     delay: 8,
-  //     duration: 4,
-  //     opacity: 1,
-  //     onComplete: () => {
-  //       console.log('allow touch');
-  //     }
-  //   })
-  // }
-
 }

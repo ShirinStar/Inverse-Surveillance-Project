@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import Experience from "../Experience.js";
 import Tatreez from './Tatreez.js';
-import Video from './Video.js'
+import VideoStitch from './VideoStitch.js'
 
 export default class Content {
   constructor() {
@@ -11,7 +11,7 @@ export default class Content {
     this.canvas = this.experience.canvas
     this.camera = this.experience.camera
 
-    this.video = new Video()
+    this.video = new VideoStitch()
 
     this.tatreez = new Tatreez()
  

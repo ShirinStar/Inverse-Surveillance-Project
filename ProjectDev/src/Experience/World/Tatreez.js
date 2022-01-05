@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import vertexShader from '../shaders/tatreezVertex.glsl';
 import fragmentShader from '../shaders/tatreezFragment.glsl';
 import Experience from "../Experience.js";
+import gsap from 'gsap';
 
 
 export default class Tatreez {
@@ -28,12 +29,11 @@ export default class Tatreez {
   
     this.numberOfRenderedParticles = 100;
     this.changingOpacity = 400;
-    this.changeRandomX = 0;
-    this.changeRandomY = 0;
-    this.changeRandomZ = 0;
 
     this.loadSVG()
     this.updateTrails()
+
+    this.animateTatreez()
   }
 
   loadSVG() {
@@ -49,14 +49,14 @@ export default class Tatreez {
         this.pointAt = this.len * i / this.numberOfPoints //this will change based on the length and total number of the path
         this.onePoint = path.getPointAtLength(this.pointAt)
        
-        this.randX = (Math.random() - 0.5) * this.changeRandomX
-        this.randY = (Math.random() - 0.5) * this.changeRandomY
-        this.randZ = (Math.random() - 0.5) * this.changeRandomZ
+        this.randX = (Math.random() - 0.5) 
+        this.randY = (Math.random() - 0.5)
+        this.randZ = (Math.random() - 0.5) 
 
         this.points.push(new THREE.Vector3(
-          this.onePoint.x - this.SVGViewBox / 2 + this.randX,
-          this.onePoint.y - this.SVGViewBox / 2 + this.randY,
-          this.randZ))
+          this.onePoint.x - this.SVGViewBox / 2,
+          this.onePoint.y - this.SVGViewBox / 2,
+          0))
       }
 
       this.lines.push({
@@ -69,7 +69,8 @@ export default class Tatreez {
         speed: 1
       })
 
-      this.maxPoints = this.points.length * 200;
+      //how many points
+      this.maxPoints = this.points.length * 250;
 
       this.positions = new Float32Array(this.maxPoints * 3)
       this.opacity = new Float32Array(this.maxPoints)
@@ -117,7 +118,7 @@ export default class Tatreez {
     this.SVGMesh = new THREE.Points(this.geometry, this.material)
 
     this.SVGMesh.rotation.z = Math.PI
-    this.SVGMesh.scale.set(0.02, 0.02, 0.02)
+    this.SVGMesh.scale.set(0.01, 0.01, 0.01)
 
     //this.scene.add(this.SVGMesh)
   }
@@ -154,5 +155,35 @@ export default class Tatreez {
     console.log('tatreez destroy');
   }
 
+  animateTatreez() {
+    gsap.to(this, {
+      delay: 15,
+      duration: 20, 
+      numberOfRenderedParticles: 350,
+    })
+    gsap.to(this.material.uniforms.uPointSize, {
+      delay: 10,
+      duration: 5, 
+      value: 6.0,
+    })
+    gsap.to(this.material.uniforms.uRangePointsRandom, {
+      delay: 10,
+      duration: 2, 
+      value: 1,
+    })
+    gsap.to(this.material.uniforms.uRangePointsRandom, {
+      delay: 10,
+      duration: 15, 
+      value: 20,
+    })
+    gsap.to(this.material.uniforms.uPointSize, {
+      delay: 15,
+      duration: 20, 
+      value: 1.0,
+      onComplete: () => {
+        this.onDestroy()
+      }
+    })
+  }
 }
 
