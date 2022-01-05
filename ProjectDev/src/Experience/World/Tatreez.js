@@ -117,7 +117,8 @@ export default class Tatreez {
     this.SVGMesh = new THREE.Points(this.geometry, this.material)
 
     this.SVGMesh.rotation.z = Math.PI
-    this.SVGMesh.scale.set(0.01, 0.01, 0.01)
+    this.SVGMesh.rotation.x = -Math.PI / 4
+    this.SVGMesh.scale.set(0.01, 0.02, 0.02)
 
     //this.scene.add(this.SVGMesh)
   }

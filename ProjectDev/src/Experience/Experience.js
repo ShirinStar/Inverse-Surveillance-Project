@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import Camera from './Camera.js'
 import Renderer from './Renderer.js'
 import Size from "./Utils/Size.js"
@@ -9,6 +10,7 @@ import sources from './sources.js'
 import Debug from './Utils/Debug.js'
 
 let instance = null
+
 
 export default class Experience {
   constructor(canvas) {
@@ -33,7 +35,14 @@ export default class Experience {
     this.resources = new Resources(sources)
     this.camera = new Camera()
     this.renderer = new Renderer()
+    
     this.world = new World()
+
+    //move contoller to the AR class and then add video on controller position
+    //document.body.appendChild(ARButton.createButton( this.renderer.instance ));
+    console.log(this.renderer.instance.xr);
+    this.controller = this.renderer.instance.xr.getController(0);
+    console.log(this.controller);
 
     //resize event
     this.sizes.on('resize', () => {

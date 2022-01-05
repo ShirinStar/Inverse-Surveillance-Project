@@ -35,7 +35,8 @@ export default class AR extends Content {
       //make sure bg color is light grey 240 240 240
     })
 
-    this.markerOne.add(this.tatreez.SVGMesh)   
+    this.markerOne.add(this.tatreez.SVGMesh) 
+    
     //this.scene.add(this.tatreez.SVGMesh)
 
     this.setArToolKitSource()
@@ -67,6 +68,7 @@ export default class AR extends Content {
   }
 
   update() {
+  
     // update artoolkit on every frame
     if (this.arToolkitSource.ready !== false) {
       this.arToolkitContext.update(this.arToolkitSource.domElement)
@@ -78,7 +80,16 @@ export default class AR extends Content {
     }
 
     if(this.playVideo1) {
+      // this.video.videoStitchMesh.worldToLocal(this.markerOne.matrixWorld);
+      // this.video.videoStitchMesh.position.setFromMatrixPosition(this.tatreez.SVGMesh.matrixWorld);
+      this.video.videoStitchMesh.position.set( 0, 0, - 0.3 ).applyMatrix4( this.tatreez.SVGMesh.matrixWorld );
+      this.tatreez.SVGMesh.updateMatrixWorld()
+      //this.video.updateMatrixWorld()
+
       this.scene.add(this.video.videoStitchMesh)
+
+    
+      // this.video.videoStitchMesh.quaternion.setFromRotationMatrix(this.markerOne.matrixWorld)
     }
   }
 
