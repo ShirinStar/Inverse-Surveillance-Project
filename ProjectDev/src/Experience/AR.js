@@ -84,7 +84,7 @@ export default class AR extends Content {
     //7. check with ar and markers. does the video stays in that position?
    
     gsap.to(this, {
-      delay: 15,
+      delay: 12,
       playVideo1: true,
       onComplete: () => {
         this.video.animateStitch()

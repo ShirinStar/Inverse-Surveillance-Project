@@ -64,29 +64,29 @@ export default class VideoStitch {
 
   animateStitch() {
     gsap.to(this.videoStitchMaterial.uniforms.uLengthStripX, {
-      duration: 10,
+      duration: 5,
       value: 0.01,
     })
     gsap.to(this.videoStitchMaterial.uniforms.uLengthStripY, {
       delay: 5,
-      duration: 5,
+      duration: 3,
       value: 0.01,
       onComplete: () => {
         this.video.play()
       }
     })
     gsap.to(this.videoStitchMaterial.uniforms.uWidthStripX, {
-      delay: 15,
+      delay: 8,
       duration: 15,
       value: 0.7,
     })
     gsap.to(this.videoStitchMaterial.uniforms.uWidthStripY, {
-      delay: 20,
+      delay: 15,
       duration: 20,
       value: 0.4,
     })
     gsap.to(this.videoStitchMaterial.uniforms.uWidthStripX, {
-      delay: 35,
+      delay: 30,
       duration: 10,
       value: 0.1,
     })

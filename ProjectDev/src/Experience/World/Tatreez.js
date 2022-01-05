@@ -178,7 +178,7 @@ export default class Tatreez {
     })
     gsap.to(this.material.uniforms.uPointSize, {
       delay: 15,
-      duration: 10, 
+      duration: 6, 
       value: 1.0,
       onComplete: () => {
         this.onDestroy()
