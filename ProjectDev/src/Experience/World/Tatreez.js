@@ -102,8 +102,10 @@ export default class Tatreez {
       fragmentShader: fragmentShader,
       uniforms: {
         uTexture: { value: this.videoTexture },
-        uAlphaMap: {value: this.particleTexture},
-        uOpacity: { value: 1 }
+        uAlphaMap: { value: this.particleTexture },
+        uOpacity: { value: 1 },
+        uPointSize: { value: 15.0},
+        uRangePointsRandom: { value: 0.0 }
       },
       transparent: true,
       // opacity: 1,

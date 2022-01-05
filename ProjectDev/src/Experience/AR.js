@@ -94,23 +94,44 @@ export default class AR extends Content {
   ///
   animateTatreezTransition() {
     //change number of rendered particles to create  an interesting transition to video 
-    //1. work on number of paarticles
+    //1. work on number of particles
     //2.work on opacity
-    //3. check changing particles size? 
-    //4. then transiittion in the video... 
+    //3. check changing point size? 
+    //4. then transition to the video... 
     //5. remove tatreez from scene
     //6. add video to the scene in the position of the marker? camera? 
-    
-    // gsap.to(this.tatreez, {
-    //   delay: 5,
-    //   duration: 20, 
-    //   numberOfRenderedParticles: 100,
-    // })
-    // gsap.to(this.tatreez, {
-    //   delay: 20,
-    //   duration: 5, 
-    //   changingOpacity: 1200
-    // })
+    //7. check with ar and markers. 
+   
+    gsap.to(this.tatreez, {
+      delay: 15,
+      duration: 20, 
+      numberOfRenderedParticles: 350,
+    })
+    gsap.to(this.tatreez.material.uniforms.uRangePointsRandom, {
+      delay: 10,
+      duration: 2, 
+      value: 1,
+    })
+    gsap.to(this.tatreez.material.uniforms.uPointSize, {
+      delay: 5,
+      duration: 10, 
+      value: 8.0,
+    })
+    gsap.to(this.tatreez.material.uniforms.uRangePointsRandom, {
+      delay: 15,
+      duration: 15, 
+      value: 10,
+    })
+    gsap.to(this.tatreez.material.uniforms.uPointSize, {
+      delay: 15,
+      duration: 30, 
+      value: 1.0,
+      onComplete: () => {
+        this.tatreez.onDestroy()
+        //switch to markerRoot.remove
+        this.scene.remove(this.tatreez.SVGMesh)
+      }
+    })
     // gsap.to(this.tatreez, {
     //   delay: 5,
     //   duration: 1,
