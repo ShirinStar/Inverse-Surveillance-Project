@@ -24,22 +24,23 @@ export default class AR extends Content {
       detectionMode: 'mono',
     })
 
-    this.markerRoot = new THREE.Group();
-    this.scene.add(this.markerRoot);
+    //defining markers
+    this.markerOne = new THREE.Group();
+    this.scene.add(this.markerOne);
 
-    this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerRoot, {
+    this.markerControls = new THREEx.ArMarkerControls(this.arToolkitContext, this.markerOne, {
       type: 'pattern',
-      patternUrl: "pattern-lightGreyThree.patt",
+      patternUrl: "tatreez/pattern-threeLines.patt",
       //https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
       //make sure bg color is light grey 240 240 240
     })
 
-    //this.markerRoot.add(this.tatreez.SVGMesh)   
-    this.scene.add(this.tatreez.SVGMesh)
+    this.markerOne.add(this.tatreez.SVGMesh)   
+    //this.scene.add(this.tatreez.SVGMesh)
 
     this.setArToolKitSource()
     this.createArToolKitContext()
-    this.animateTatreezTransition()
+  
   }
 
   // setup arToolkitSource
@@ -71,14 +72,16 @@ export default class AR extends Content {
       this.arToolkitContext.update(this.arToolkitSource.domElement)
     }
     this.tatreez.updateTrails()
-    // this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true
+
+    if(this.markerOne.visible && !this.playVideo1) {
+      this.animateTatreezTransition()
+    }
 
     if(this.playVideo1) {
       this.scene.add(this.video.videoStitchMesh)
     }
   }
 
-//if markeroot is visible
   animateTatreezTransition() {
   
     //7. check with ar and markers. does the video stays in that position?
@@ -93,6 +96,7 @@ export default class AR extends Content {
     gsap.to(this, {
       delay: 40,
       onComplete: () => {
+        //remove from marker root
         this.scene.remove(this.tatreez.SVGMesh)
       }
     })

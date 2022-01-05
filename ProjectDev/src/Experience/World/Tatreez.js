@@ -4,7 +4,6 @@ import fragmentShader from '../shaders/tatreezFragment.glsl';
 import Experience from "../Experience.js";
 import gsap from 'gsap';
 
-
 export default class Tatreez {
   constructor() {
     this.experience = new Experience()
@@ -18,13 +17,13 @@ export default class Tatreez {
     this.video = document.querySelector('.video')
     this.videoTexture = new THREE.VideoTexture(this.video)
     
-
     this.SVGMesh = null;
     this.geometry;
     this.material;
     this.positions;
     this.opacity;
     this.lines = [];
+    //this is for SVG 100x100
     this.SVGViewBox = 100;
   
     this.numberOfRenderedParticles = 100;
@@ -33,7 +32,7 @@ export default class Tatreez {
     this.loadSVG()
     this.updateTrails()
 
-    this.animateTatreez()
+    this.animateTatreezTransition()
   }
 
   loadSVG() {
@@ -123,7 +122,7 @@ export default class Tatreez {
     //this.scene.add(this.SVGMesh)
   }
 
-  //animationg particles path
+  //animating particles path
   updateTrails() {
     let j = 0;
 
@@ -155,7 +154,7 @@ export default class Tatreez {
     console.log('tatreez destroy');
   }
 
-  animateTatreez() {
+  animateTatreezTransition() {
     gsap.to(this, {
       delay: 15,
       duration: 20, 
