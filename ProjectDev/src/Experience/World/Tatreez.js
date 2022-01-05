@@ -174,11 +174,11 @@ export default class Tatreez {
     gsap.to(this.material.uniforms.uRangePointsRandom, {
       delay: 10,
       duration: 15, 
-      value: 20,
+      value: (Math.random() - 0.5) * 50,
     })
     gsap.to(this.material.uniforms.uPointSize, {
       delay: 15,
-      duration: 20, 
+      duration: 10, 
       value: 1.0,
       onComplete: () => {
         this.onDestroy()

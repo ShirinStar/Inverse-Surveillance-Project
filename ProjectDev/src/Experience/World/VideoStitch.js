@@ -47,19 +47,18 @@ export default class VideoStitch {
       }
     })
 
-    // if (this.debug.active) {
-    //   this.debugFolder.add(this.videoStitchMaterial.uniforms.uRange, 'value')
-    //     .min(0)
-    //     .max(4)
-    //     .step(0.001)
-    //     .name('Noise Range')
-    // }
+    if (this.debug.active) {
+      this.debugFolder.add(this.videoStitchMaterial.uniforms.uLengthStripX, 'value')
+        .min(0)
+        .max(1)
+        .step(0.001)
+        .name('lengthStrip x')
+    }
   }
 
   setMesh() {
     this.videoStitchMesh = new THREE.Mesh(this.videoGeometry, this.videoStitchMaterial);
     this.videoStitchMesh.position.z = 0.5;
-    // this.videoStitchMesh.rotation.x = -90;
     // this.scene.add(this.videoStitchMesh)
   }
 

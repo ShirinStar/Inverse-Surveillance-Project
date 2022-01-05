@@ -7,6 +7,7 @@ export default class AR extends Content {
     super()
 
     this.count = 0;
+    this.playVideo1 = false;
 
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
@@ -33,7 +34,7 @@ export default class AR extends Content {
       //make sure bg color is light grey 240 240 240
     })
 
-    //this.markerRoot.add(this.video.videoNoiseMesh)   
+    //this.markerRoot.add(this.tatreez.SVGMesh)   
     this.scene.add(this.tatreez.SVGMesh)
 
     this.setArToolKitSource()
@@ -72,7 +73,7 @@ export default class AR extends Content {
     this.tatreez.updateTrails()
     // this.tatreez.SVGMesh.geometry.attributes.position.needsUpdate = true
 
-    if(this.count === 1) {
+    if(this.playVideo1) {
       this.scene.add(this.video.videoStitchMesh)
     }
   }
@@ -83,8 +84,8 @@ export default class AR extends Content {
     //7. check with ar and markers. does the video stays in that position?
    
     gsap.to(this, {
-      delay: 10,
-      count: 1,
+      delay: 15,
+      playVideo1: true,
       onComplete: () => {
         this.video.animateStitch()
       }

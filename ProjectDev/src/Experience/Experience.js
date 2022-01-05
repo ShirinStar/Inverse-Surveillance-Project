@@ -46,7 +46,7 @@ export default class Experience {
     const animate = () => {
       const elapsedTime = clock.getElapsedTime()
 
-      this.world.ar.video.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.5
+      this.world.ar.video.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.75
 
       requestAnimationFrame(animate);
       this.update();
@@ -54,14 +54,12 @@ export default class Experience {
     animate()
   }
 
-
   resize() {
     this.camera.resize()
     //the world holds the onResize of the arjs
     this.world.resize()
     this.renderer.resize()
   }
-
 
   update() {
     this.camera.update()
