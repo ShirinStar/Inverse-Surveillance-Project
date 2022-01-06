@@ -10,6 +10,7 @@ export default class Content {
     this.scene = this.experience.scene
     this.canvas = this.experience.canvas
     this.camera = this.experience.camera
+    this.renderer = this.experience.renderer
 
     this.video = new VideoStitch()
 

@@ -1,16 +1,9 @@
 import * as THREE from 'three'
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
-import Camera from './Camera.js'
-import Renderer from './Renderer.js'
-import Size from "./Utils/Size.js"
-import Time from "./Utils/Time.js"
 import World from './World/World.js'
-import Resources from './Utils/Resources.js'
-import sources from './sources.js'
 import Debug from './Utils/Debug.js'
 
 let instance = null
-
 
 export default class Experience {
   constructor(canvas) {
@@ -29,57 +22,91 @@ export default class Experience {
 
     //setup
     this.debug = new Debug()
-    this.sizes = new Size()
-    this.time = new Time()
+
     this.scene = new THREE.Scene()
-    this.resources = new Resources(sources)
-    this.camera = new Camera()
-    this.renderer = new Renderer()
-    
-    this.world = new World()
+  
+    this.sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
 
-    //move contoller to the AR class and then add video on controller position
-    //document.body.appendChild(ARButton.createButton( this.renderer.instance ));
-    console.log(this.renderer.instance.xr);
-    this.controller = this.renderer.instance.xr.getController(0);
-    console.log(this.controller);
+    this.camera = new THREE.PerspectiveCamera(70, this.sizes.width * 2 / this.sizes.height, 0.01, 1000)
+    this.camera.position.z = 3
+    this.scene.add(this.camera)
 
-    //resize event
-    this.sizes.on('resize', () => {
-      this.resize()
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true,
+      alpha: true
     })
+
+    this.renderer.setSize(this.sizes.width, this.sizes.height)
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    this.renderer.xr.enabled = true;
+
+    window.addEventListener('resize', () => {
+      //the world takes care of the AR.js resize
+      this.world.resize()
+
+      this.sizes.width = window.innerWidth
+      this.sizes.height = window.innerHeight
+
+      this.camera.aspect = this.sizes.width / this.sizes.height
+      this.camera.updateProjectionMatrix()
+
+      this.renderer.setSize(this.sizes.width, this.sizes.height)
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    })
+
+    document.body.appendChild(ARButton.createButton(this.renderer));
+    //this.renderer.domElement.style.display = "none";
+    // //webxr api
+    this.controller = this.renderer.xr.getController(0);
+    this.controller.addEventListener('select', this.onSelect.bind(this));
+    this.scene.add(this.controller);
+
+    this.geometry = new THREE.CylinderGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2);
+
+    this.world = new World()
 
     //animation
     const clock = new THREE.Clock()
 
-    const animate = () => {
+    const animateTime = () => {
       const elapsedTime = clock.getElapsedTime()
-
-      this.world.ar.video.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.75
-
-      requestAnimationFrame(animate);
-      this.update();
+      //this.world.ar.video.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.75
+      window.requestAnimationFrame(animateTime);
+      // this.update()
     }
-    animate()
+    animateTime()
+    this.animate()
   }
 
-  resize() {
-    this.camera.resize()
-    //the world holds the onResize of the arjs
-    this.world.resize()
-    this.renderer.resize()
+
+  animate() {
+    this.renderer.setAnimationLoop(this.update.bind(this));
   }
 
   update() {
-    this.camera.update()
+    this.renderer.render(this.scene, this.camera);
     //the world is updating the ar -> ar updates the content
     this.world.update()
-    this.renderer.update()
   }
 
-  // destroy() {
-  //   this.sizes.off('resize')
-  //   this.time.off('tick')
-  // }
+
+  onSelect() {
+    console.log('click');
+    this.material = new THREE.MeshBasicMaterial({ color: 0xffffff * Math.random() });
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.mesh.position.set(0, 0, - 0.3).applyMatrix4(this.controller.matrixWorld);
+    this.mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
+    this.scene.add(this.mesh);
+    // if(this.playVideo1) {
+    // this.video.animateStitch()
+    // this.video.videoStitchMesh.position.set( 0, 0, - 0.3 ).applyMatrix4(this.controller.matrixWorld);
+    // this.video.videoStitchMesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
+    // this.scene.add(this.video.videoStitchMesh)
+    // }
+  }
 
 }

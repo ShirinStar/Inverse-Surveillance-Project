@@ -5,10 +5,17 @@ import Content from './World/Content.js';
 export default class AR extends Content {
   constructor() {
     super()
-
     this.count = 0;
     this.playVideo1 = false;
-
+    
+    //webxr
+    // this.controller = this.renderer.xr.getController(0);
+    // this.controller.addEventListener('select', this.onSelect.bind(this));
+    // this.scene.add(this.controller);
+    // console.log(this.controller);
+    
+   
+    //ar.js
     this.arToolkitSource = new THREEx.ArToolkitSource({
       sourceType: 'webcam',
 
@@ -21,7 +28,7 @@ export default class AR extends Content {
 
     this.arToolkitContext = new THREEx.ArToolkitContext({
       cameraParametersUrl: 'camera_para.dat', //from https://github.com/jeromeetienne/AR.js/blob/master/data/data/camera_para.dat
-      detectionMode: 'mono',
+      // detectionMode: 'mono',
     })
 
     //defining markers
@@ -36,12 +43,11 @@ export default class AR extends Content {
     })
 
     this.markerOne.add(this.tatreez.SVGMesh) 
-    
-    //this.scene.add(this.tatreez.SVGMesh)
+
+    //this.canvas.addEventListener('touchstart', this.onSelect.bind(this))
 
     this.setArToolKitSource()
-    this.createArToolKitContext()
-  
+    this.createArToolKitContext()  
   }
 
   // setup arToolkitSource
@@ -67,29 +73,25 @@ export default class AR extends Content {
     }
   }
 
+  // onSelect() {
+  //   console.log('click');
+  //   // if(this.playVideo1) {
+  //     // this.video.animateStitch()
+  //     // this.video.videoStitchMesh.position.set( 0, 0, - 0.3 ).applyMatrix4(this.controller.matrixWorld);
+  //     // this.video.videoStitchMesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
+  //     // this.scene.add(this.video.videoStitchMesh)
+  //   // }
+  // }
+
   update() {
-  
     // update artoolkit on every frame
-    if (this.arToolkitSource.ready !== false) {
-      this.arToolkitContext.update(this.arToolkitSource.domElement)
-    }
+    // if (this.arToolkitSource.ready !== false) {
+    //   this.arToolkitContext.update(this.arToolkitSource.domElement)
+    // }
     this.tatreez.updateTrails()
 
     if(this.markerOne.visible && !this.playVideo1) {
       this.animateTatreezTransition()
-    }
-
-    if(this.playVideo1) {
-      // this.video.videoStitchMesh.worldToLocal(this.markerOne.matrixWorld);
-      // this.video.videoStitchMesh.position.setFromMatrixPosition(this.tatreez.SVGMesh.matrixWorld);
-      this.video.videoStitchMesh.position.set( 0, 0, - 0.3 ).applyMatrix4( this.tatreez.SVGMesh.matrixWorld );
-      this.tatreez.SVGMesh.updateMatrixWorld()
-      //this.video.updateMatrixWorld()
-
-      this.scene.add(this.video.videoStitchMesh)
-
-    
-      // this.video.videoStitchMesh.quaternion.setFromRotationMatrix(this.markerOne.matrixWorld)
     }
   }
 
@@ -97,13 +99,13 @@ export default class AR extends Content {
   
     //7. check with ar and markers. does the video stays in that position?
    
-    gsap.to(this, {
-      delay: 12,
-      playVideo1: true,
-      onComplete: () => {
-        this.video.animateStitch()
-      }
-    })
+    // gsap.to(this, {
+    //   delay: 12,
+    //   playVideo1: true,
+    //   onComplete: () => {
+    //     this.video.animateStitch()
+    //   }
+    // })
     gsap.to(this, {
       delay: 40,
       onComplete: () => {
