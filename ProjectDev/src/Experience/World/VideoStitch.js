@@ -13,7 +13,7 @@ export default class VideoStitch {
     this.camera = this.experience.camera
     this.debug = this.experience.debug
 
-    this.video = document.querySelector('.video')
+    this.video = document.querySelector('.video.one')
     this.videoTexture = new THREE.VideoTexture(this.video)
 
     //debug

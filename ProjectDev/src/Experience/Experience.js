@@ -68,6 +68,7 @@ export default class Experience {
 
     //content
     this.world = new World()
+    console.log(this.world);
 
     //animation
     this.clock = new THREE.Clock()
@@ -83,8 +84,10 @@ export default class Experience {
   render(timestamp, frame) {
     const elapsedTime = this.clock.getElapsedTime()
 
-    this.renderer.render(this.scene, this.camera);
-
+    this.world.webxr.videoNoise.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+  
     this.world.update()
+
+    this.renderer.render(this.scene, this.camera)
   }
 }

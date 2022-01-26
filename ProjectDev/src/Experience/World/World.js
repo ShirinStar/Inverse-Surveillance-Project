@@ -15,13 +15,12 @@ export default class World {
 
 
     //test mesh
-    const testMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({color: 'red'})
-    )
-    
-    testMesh.position.set(0, 0, -5)
-    this.scene.add(testMesh)
+    // const testMesh = new THREE.Mesh(
+    //   new THREE.BoxGeometry(1, 1, 1),
+    //   new THREE.MeshBasicMaterial({color: 'red'})
+    // )
+    // testMesh.position.set(0, 0, -5)
+    // this.scene.add(testMesh)
     
   }
 
