@@ -6,24 +6,46 @@ export default class WebXR extends Content {
   constructor() {
     super()
 
+    this.videoCount = 0
+
     this.controller = this.renderer.xr.getController(0);
     this.controller.addEventListener('select', this.onSelect.bind(this));
     this.scene.add(this.controller)
 
+    this.videoOne = document.querySelector('.video.one')
+
   }
-   onSelect() {
-    const geometry = new THREE.ConeGeometry( 0.1, 0.2, 32 ).rotateX(Math.PI / 2);;
-    const material = new THREE.MeshBasicMaterial({
-      color      :  0xffffff * Math.random(),
-      transparent: 1,
-      opacity    : 0.8
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    
-    mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( this.controller.matrixWorld );
-    mesh.quaternion.setFromRotationMatrix( this.controller.matrixWorld );
-    
-    this.scene.add(mesh);
+  onSelect() {
+
+    //adding video to the scene in the position of the 'tap' and based on order
+    if (this.videoCount === 0) {
+      this.videoOne.play()
+
+      const mesh = new THREE.Points(this.videoNoiseOne.videoGeometry, this.videoNoiseOne.videoNoiseMaterial)
+      mesh.scale.multiplyScalar(0.3)
+      // mesh.position.z = -.5
+
+      mesh.position.set(0, 0, - 0.3).applyMatrix4(this.controller.matrixWorld);
+      mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
+
+      this.scene.add(mesh);
+
+      this.videoCount++
+    }
+    if (this.videoCount === 1) {
+      // this.videoOne.play()
+
+      // const mesh = new THREE.Points(this.videoNoiseOne.videoGeometry, this.videoNoiseOne.videoNoiseMaterial)
+      // mesh.scale.multiplyScalar(0.3)
+      // // mesh.position.z = -.5
+
+      // mesh.position.set(0, 0, - 0.3).applyMatrix4(this.controller.matrixWorld);
+      // mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
+
+      // this.scene.add(mesh);
+
+      this.videoCount++
+    }
   }
 
 }

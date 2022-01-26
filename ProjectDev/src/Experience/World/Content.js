@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Experience from "../Experience.js"
 import Tatreez from './Tatreez.js'
 import VideoStitch from './VideoStitch.js'
-import VideoNoise from './VideoNoise.js'
+import VideoNoiseOne from './VideoNoiseOne.js'
 
 export default class Content {
   constructor() {
@@ -14,7 +14,7 @@ export default class Content {
     this.renderer = this.experience.renderer
 
     this.videoStich = new VideoStitch()
-    this.videoNoise = new VideoNoise()
+    this.videoNoiseOne = new VideoNoiseOne()
 
     //this.tatreez = new Tatreez()
  
