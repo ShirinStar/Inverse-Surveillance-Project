@@ -40,7 +40,7 @@ export default class VideoNoiseOne {
   }
 
   setGeometry() {
-    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.025, 480 / 2, 360 / 2, 480 / 2)
+    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.05, 480 / 2, 360 / 2, 480 / 2)
   }
 
   setMaterial() {

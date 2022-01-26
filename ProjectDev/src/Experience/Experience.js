@@ -57,6 +57,7 @@ export default class Experience {
     button.addEventListener('click', async () => {
       console.log('enter AR')
       titles.style.display = 'none'
+      //turn off sound when click again on stop AR
       this.world.webxr.soundOff()
       //this.world.webxr.soundControl()
     })
