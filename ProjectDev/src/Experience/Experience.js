@@ -15,22 +15,21 @@ export default class Experience {
 
     instance = this
 
-    //global scope
+    //access in global scope
     window.experience = this
-
-    this.canvas = canvas
 
     //setup
     this.debug = new Debug()
 
+    this.canvas = canvas
     this.scene = new THREE.Scene()
-  
+
     this.sizes = {
       width: window.innerWidth,
       height: window.innerHeight
     }
 
-    this.camera = new THREE.PerspectiveCamera(70, this.sizes.width * 2 / this.sizes.height, 0.01, 1000)
+    this.camera = new THREE.PerspectiveCamera(70, this.sizes.width / this.sizes.height, 0.01, 1000)
     this.camera.position.z = 3
     this.scene.add(this.camera)
 
@@ -42,71 +41,50 @@ export default class Experience {
 
     this.renderer.setSize(this.sizes.width, this.sizes.height)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.renderer.xr.enabled = true;
+    this.renderer.xr.enabled = true //init webxr api
+
+    const button = ARButton.createButton(this.renderer, {
+      optionalFeatures: ["dom-overlay", "dom-overlay-for-handheld-ar"],
+      domOverlay: {
+        root: document.body
+      }
+    });
+    document.body.appendChild(button)
+    button.style.backgroundColor = 'black'
+
+    button.addEventListener('click', () => {
+      console.log('enter AR')
+    })
 
     window.addEventListener('resize', () => {
-      //the world takes care of the AR.js resize
       this.world.resize()
-
       this.sizes.width = window.innerWidth
-      this.sizes.height = window.innerHeight
-
+      this.sizes.height = window.innerHeigh
       this.camera.aspect = this.sizes.width / this.sizes.height
       this.camera.updateProjectionMatrix()
-
       this.renderer.setSize(this.sizes.width, this.sizes.height)
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     })
 
-    document.body.appendChild(ARButton.createButton(this.renderer));
-    //this.renderer.domElement.style.display = "none";
-    // //webxr api
-    this.controller = this.renderer.xr.getController(0);
-    this.controller.addEventListener('select', this.onSelect.bind(this));
-    this.scene.add(this.controller);
-
-    this.geometry = new THREE.CylinderGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2);
-
+    //content
     this.world = new World()
 
     //animation
-    const clock = new THREE.Clock()
+    this.clock = new THREE.Clock()
 
-    const animateTime = () => {
-      const elapsedTime = clock.getElapsedTime()
-      //this.world.ar.video.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.75
-      window.requestAnimationFrame(animateTime);
-      // this.update()
-    }
-    animateTime()
     this.animate()
   }
 
 
   animate() {
-    this.renderer.setAnimationLoop(this.update.bind(this));
+    this.renderer.setAnimationLoop(this.render.bind(this));
   }
 
-  update() {
+  render(timestamp, frame) {
+    const elapsedTime = this.clock.getElapsedTime()
+
     this.renderer.render(this.scene, this.camera);
-    //the world is updating the ar -> ar updates the content
+
     this.world.update()
   }
-
-
-  onSelect() {
-    console.log('click');
-    this.material = new THREE.MeshBasicMaterial({ color: 0xffffff * Math.random() });
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(0, 0, - 0.3).applyMatrix4(this.controller.matrixWorld);
-    this.mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
-    this.scene.add(this.mesh);
-    // if(this.playVideo1) {
-    // this.video.animateStitch()
-    // this.video.videoStitchMesh.position.set( 0, 0, - 0.3 ).applyMatrix4(this.controller.matrixWorld);
-    // this.video.videoStitchMesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
-    // this.scene.add(this.video.videoStitchMesh)
-    // }
-  }
-
 }

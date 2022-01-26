@@ -120,7 +120,7 @@ export default class Tatreez {
     this.SVGMesh.rotation.x = -Math.PI / 4
     this.SVGMesh.scale.set(0.01, 0.02, 0.02)
 
-    //this.scene.add(this.SVGMesh)
+    this.scene.add(this.SVGMesh)
   }
 
   //animating particles path

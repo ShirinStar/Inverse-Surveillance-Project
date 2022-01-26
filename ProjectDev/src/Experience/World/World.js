@@ -1,30 +1,36 @@
 import * as THREE from 'three'
-import AR from '../AR.js';
 import Experience from "../Experience.js";
+import Webxr from '../WebXR.js'
+import ARjs from '../AR.js';
+
 
 
 export default class World {
   constructor() {
     this.experience = new Experience()
     this.scene = this.experience.scene
-   
-    this.ar = new AR()
+  
+    this.webxr = new Webxr()
+    //this.arjs = new ARjs()
 
-    // const testMesh = new THREE.Mesh(
-    //   new THREE.BoxGeometry(1, 1, 1),
-    //   new THREE.MeshStandardMaterial()
-    // )
 
-    // this.scene.add(testMesh)
+    //test mesh
+    const testMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial({color: 'red'})
+    )
+    
+    testMesh.position.set(0, 0, -5)
+    this.scene.add(testMesh)
     
   }
 
   update() {
-   this.ar.update()
+    //this.arjs.update()
     // this.tatreez.updateTrails()
   }
 
   resize() {
-   this.ar.onResize()
+   //this.arjs.onResize()
   }
 }

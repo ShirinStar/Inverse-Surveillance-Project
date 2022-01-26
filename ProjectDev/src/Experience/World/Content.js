@@ -12,9 +12,9 @@ export default class Content {
     this.camera = this.experience.camera
     this.renderer = this.experience.renderer
 
-    this.video = new VideoStitch()
+    this.videoStich = new VideoStitch()
 
-    this.tatreez = new Tatreez()
+    //this.tatreez = new Tatreez()
  
   }
 }
