@@ -1,19 +1,32 @@
-*
-{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
 
 html,
-body
-{
-    overflow: hidden;
+body {
+  overflow: hidden;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
-.webgl
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.enteringTitles {
+  margin: auto;
+  width: 60%;
+  padding-top: 20%; 
+}
+
+.innerTitle {
+  border: 3px solid #C0683A;
+  color: #155C4D;
+  text-align: center;
+  padding: 50px 25px;
+  font-weight: 300;
+  font-size: 15px;
 }

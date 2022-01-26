@@ -40,7 +40,7 @@ export default class VideoNoiseOne {
   }
 
   setGeometry() {
-    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.05, 480 / 2, 360 / 2, 480 / 2)
+    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.025, 480 / 2, 360 / 2, 480 / 2)
   }
 
   setMaterial() {
@@ -113,7 +113,7 @@ export default class VideoNoiseOne {
     gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
       delay: 2,
       duration: 10,
-      value: 10.0
+      value: 8.0
     })
   }
 

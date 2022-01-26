@@ -18,12 +18,10 @@ export default class WebXR extends Content {
   }
 
   onSelect() {
-
     this.soundControl()
 
     //adding video to the scene in the position of the 'tap' and based on order
     if (this.videoCount === 0) {
-  
       this.videoOne.play()
       this.videoNoiseOne.fadeIn()
 

@@ -52,8 +52,11 @@ export default class Experience {
     document.body.appendChild(button)
     button.style.backgroundColor = 'black'
 
+    const titles = document.querySelector('.enteringTitles')
+
     button.addEventListener('click', async () => {
       console.log('enter AR')
+      titles.style.display = 'none'
       this.world.webxr.soundOff()
       //this.world.webxr.soundControl()
     })
