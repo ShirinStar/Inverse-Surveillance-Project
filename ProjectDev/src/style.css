@@ -22,11 +22,16 @@ body {
   padding-top: 20%; 
 }
 
+.redaction {
+  font-family: 'Redacted', cursive;
+  text-align: left;
+}
+
 .innerTitle {
-  border: 3px solid #C0683A;
+  /* border: 2px solid #155C4D; */
   color: #155C4D;
   text-align: center;
-  padding: 50px 25px;
+  padding: 100px 25px;
   font-weight: 300;
   font-size: 15px;
 }
