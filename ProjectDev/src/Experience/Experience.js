@@ -52,8 +52,10 @@ export default class Experience {
     document.body.appendChild(button)
     button.style.backgroundColor = 'black'
 
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
       console.log('enter AR')
+      this.world.webxr.soundOff()
+      //this.world.webxr.soundControl()
     })
 
     window.addEventListener('resize', () => {
@@ -68,14 +70,12 @@ export default class Experience {
 
     //content
     this.world = new World()
-    console.log(this.world);
 
     //animation
     this.clock = new THREE.Clock()
 
     this.animate()
   }
-
 
   animate() {
     this.renderer.setAnimationLoop(this.render.bind(this));
@@ -85,7 +85,7 @@ export default class Experience {
     const elapsedTime = this.clock.getElapsedTime()
 
     this.world.webxr.videoNoiseOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
-  
+
     this.world.update()
 
     this.renderer.render(this.scene, this.camera)
