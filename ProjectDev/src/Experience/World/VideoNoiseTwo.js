@@ -33,6 +33,7 @@ export default class VideoNoiseTwo {
 
     this.setGeometry()
     this.setMaterial()
+    //this.setMesh()
 
     //this.setupAudio()
 
@@ -49,7 +50,8 @@ export default class VideoNoiseTwo {
       fragmentShader: fragmentShader,
       uniforms: {
         uTime: { value: 0 },
-        uRange: { value: 0 },
+        uPointSize: { value: .01 },
+        uRange: { value: 1.2 },
         uTexture: { value: this.videoTexture },
         uResolution: { value: new THREE.Vector4() }
       }
@@ -71,12 +73,12 @@ export default class VideoNoiseTwo {
     // this.scene.add(this.videoNoiseMesh)
   }
 
+  //audio setup
   async setupAudio() {
     this.listener = new THREE.AudioListener()
     this.camera.add(this.listener);
 
     // this.setMesh()
-
     await this.createPositionalAudio();
   }
 
@@ -100,6 +102,22 @@ export default class VideoNoiseTwo {
     this.sound.add(helper);
   }
 
+  //animate shader
+    fadeIn() {
+      gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
+        duration: 5,
+        value: 0,
+        onComplete: () => {
+          this.video.play()
+        }
+      })
+      gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
+        delay: 2,
+        duration: 10,
+        value: 10.0
+      })
+    }
+
   animate() {
     this.video.addEventListener('ended', () => {
       gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
@@ -110,6 +128,7 @@ export default class VideoNoiseTwo {
     })
   }
 
+  //audio controls
   startAudio() {
     this.sound.play()
     console.log(this.sound)

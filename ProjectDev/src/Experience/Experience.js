@@ -86,6 +86,8 @@ export default class Experience {
 
     this.world.webxr.videoNoiseOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
 
+    this.world.webxr.videoNoiseOne.videoNoiseMaterial.needsUpdate = true;
+
     this.world.update()
 
     this.renderer.render(this.scene, this.camera)

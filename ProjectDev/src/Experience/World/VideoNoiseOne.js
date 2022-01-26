@@ -32,14 +32,15 @@ export default class VideoNoiseOne {
 
     this.setGeometry()
     this.setMaterial()
+    // this.setMesh()
 
-   // this.setupAudio()
+    // this.setupAudio()
 
     this.animate()
   }
 
   setGeometry() {
-    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.1, 480 / 2, 360 / 2, 480 / 2)
+    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.05, 480 / 2, 360 / 2, 480 / 2)
   }
 
   setMaterial() {
@@ -48,7 +49,8 @@ export default class VideoNoiseOne {
       fragmentShader: fragmentShader,
       uniforms: {
         uTime: { value: 0 },
-        uRange: { value: 0 },
+        uPointSize: { value: .01 },
+        uRange: { value: 1.5 },
         uTexture: { value: this.videoTexture },
         uResolution: { value: new THREE.Vector4() }
       }
@@ -70,12 +72,12 @@ export default class VideoNoiseOne {
     // this.scene.add(this.videoNoiseMesh)
   }
 
+  //audio setup
   async setupAudio() {
     this.listener = new THREE.AudioListener()
     this.camera.add(this.listener);
 
     // this.setMesh()
-
     await this.createPositionalAudio();
   }
 
@@ -99,6 +101,22 @@ export default class VideoNoiseOne {
     this.sound.add(helper);
   }
 
+  //animate shader
+  fadeIn() {
+    gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
+      duration: 5,
+      value: 0,
+      onComplete: () => {
+        this.video.play()
+      }
+    })
+    gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
+      delay: 2,
+      duration: 10,
+      value: 10.0
+    })
+  }
+
   animate() {
     this.video.addEventListener('ended', () => {
       gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
@@ -109,6 +127,7 @@ export default class VideoNoiseOne {
     })
   }
 
+  //control audio
   startAudio() {
     this.sound.play()
     console.log(this.sound)
