@@ -33,7 +33,7 @@ export default class VideoNoiseOne {
     this.setGeometry()
     this.setMaterial()
 
-    this.setupAudio()
+   // this.setupAudio()
 
     this.animate()
   }
@@ -83,12 +83,12 @@ export default class VideoNoiseOne {
     this.sound = new THREE.PositionalAudio(this.listener);
     this.sound.setRefDistance(0.1); // the distance between sound and listener at which the volume reduction starts taking effect.
     this.sound.setDistanceModel('linear'); // this has to be linear for the max distance to work
-    this.sound.setMaxDistance(1.5); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
+    this.sound.setMaxDistance(1.8); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
     this.sound.setLoop(true);
     // Good definitions for what each of these are at
     // https://stackoverflow.com/questions/36706118/use-three-js-positionalaudio-to-make-a-cone-of-sound
     // coneInnerAngle, coneOuterAngle, coneOuterGain (from 0-1, 0 means no audio outside of cone)
-    this.sound.setDirectionalCone(180, 230, 0);
+    this.sound.setDirectionalCone(230, 280, 0);
 
     const audioLoader = new THREE.AudioLoader();
     const buffer = await audioLoader.loadAsync(this.url);

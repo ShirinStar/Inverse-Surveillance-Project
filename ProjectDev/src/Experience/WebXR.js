@@ -18,7 +18,7 @@ export default class WebXR extends Content {
 
   onSelect() {
 
-    //this.soundControl()
+    this.soundControl()
 
     //adding video to the scene in the position of the 'tap' and based on order
     if (this.videoCount === 0) {
@@ -29,8 +29,9 @@ export default class WebXR extends Content {
       mesh.position.set(0, 0, - 0.3).applyMatrix4(this.controller.matrixWorld);
       mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
       this.scene.add(mesh);
+
       mesh.add(this.videoNoiseOne.sound)
-      this.soundControl()
+      // this.soundControl()
       this.videoCount++
     }
 
@@ -43,6 +44,8 @@ export default class WebXR extends Content {
       mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
       this.scene.add(mesh);
 
+      mesh.add(this.videoNoiseTwo.sound)
+      // this.soundControl()
       this.videoCount++
     }
   }
@@ -52,11 +55,18 @@ export default class WebXR extends Content {
       await this.videoNoiseOne.setupAudio()
       this.videoNoiseOne.audioIsInitialized = true
       this.videoNoiseOne.startAudio()
-      console.log("start audio")
+      console.log("start audio one")
+    }
+    else if (!this.videoNoiseTwo.audioIsInitialized) {
+      await this.videoNoiseTwo.setupAudio()
+      this.videoNoiseTwo.audioIsInitialized = true
+      this.videoNoiseTwo.startAudio()
+      console.log("start audio two")
     }
   }
 
   soundOff() {
     this.videoNoiseOne.stopAudio()
+    this.videoNoiseTwo.stopAudio()
   }
 }
