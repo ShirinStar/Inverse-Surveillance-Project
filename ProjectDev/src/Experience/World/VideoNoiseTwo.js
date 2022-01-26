@@ -4,7 +4,7 @@ import vertexShader from '../shaders/vertexVideoNoise.glsl';
 import fragmentShader from '../shaders/fragmentVideoNoise.glsl';
 import gsap from 'gsap';
 
-export default class VideoNoiseOne {
+export default class VideoNoiseTwo {
   constructor() {
     this.experience = new Experience()
     this.sizes = this.experience.sizes
@@ -13,12 +13,12 @@ export default class VideoNoiseOne {
     this.camera = this.experience.camera
     this.debug = this.experience.debug
 
-    this.video = document.querySelector('.video.one')
+    this.video = document.querySelector('.video.two')
     this.videoTexture = new THREE.VideoTexture(this.video)
 
     //debug
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder('noise video1')
+      this.debugFolder = this.debug.ui.addFolder('noise video2')
     }
 
     this.setGeometry()
