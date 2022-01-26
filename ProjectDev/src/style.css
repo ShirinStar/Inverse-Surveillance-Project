@@ -18,7 +18,7 @@ body {
 
 .enteringTitles {
   margin: auto;
-  width: 60%;
+  width: 90%;
   padding-top: 20%; 
 }
 
@@ -33,5 +33,5 @@ body {
   text-align: center;
   padding: 100px 25px;
   font-weight: 300;
-  font-size: 15px;
+  font-size: 12px;
 }
