@@ -5,8 +5,8 @@ import fragmentShader from '../shaders/fragmentVideoNoise.glsl';
 import gsap from 'gsap';
 import { PositionalAudioHelper } from 'three/examples/jsm/helpers/PositionalAudioHelper.js';
 
-export default class VideoNoiseOne {
-  constructor() {
+export default class VideoNoise {
+  constructor(videoClassName, audioLink) {
     this.experience = new Experience()
     this.sizes = this.experience.sizes
     this.scene = this.experience.scene
@@ -14,29 +14,32 @@ export default class VideoNoiseOne {
     this.camera = this.experience.camera
     this.debug = this.experience.debug
 
+    this.videoClass = videoClassName
+    this.audio = audioLink
+   
     this.listener;
     this.sound;
-
-    this.url = '../audio/alan_watts.mp3';
 
     this.audioIsInitialized = false
     this.audioIsPlaying = false
 
-    this.video = document.querySelector('.video.one')
+    this.video = document.querySelector(this.videoClass)
     this.videoTexture = new THREE.VideoTexture(this.video)
-
-    //debug
-    if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder('noise video1')
-    }
-
+   
     this.setGeometry()
     this.setMaterial()
-    // this.setMesh()
+    this.setMesh()
 
-    // this.setupAudio()
+    this.setupAudio()
+    this.soundControl()
 
+    this.fadeIn()
     this.animate()
+
+     //debug
+     if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder('noise video')
+    }
   }
 
   setGeometry() {
@@ -93,7 +96,7 @@ export default class VideoNoiseOne {
     this.sound.setDirectionalCone(230, 280, 0);
 
     const audioLoader = new THREE.AudioLoader();
-    const buffer = await audioLoader.loadAsync(this.url);
+    const buffer = await audioLoader.loadAsync(this.audio);
     this.sound.setBuffer(buffer);
 
     // optional helper to visualize the cone shape
@@ -148,6 +151,15 @@ export default class VideoNoiseOne {
       } else {
         this.stopAudio()
       }
+    }
+  }
+
+  async soundControl() {
+    if (!this.audioIsInitialized) {
+      await this.setupAudio()
+      this.audioIsInitialized = true
+      this.startAudio()
+      console.log("start audio")
     }
   }
 

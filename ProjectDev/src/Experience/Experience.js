@@ -88,9 +88,10 @@ export default class Experience {
   render(timestamp, frame) {
     const elapsedTime = this.clock.getElapsedTime()
 
-    this.world.webxr.videoNoiseOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
-
-    this.world.webxr.videoNoiseOne.videoNoiseMaterial.needsUpdate = true;
+    if (this.world.webxr.videoOne) {
+      this.world.webxr.videoOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+      this.world.webxr.videoOne.videoNoiseMaterial.needsUpdate = true;
+    }
 
     this.world.update()
 

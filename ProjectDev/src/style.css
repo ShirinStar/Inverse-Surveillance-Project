@@ -16,9 +16,13 @@ body {
   outline: none;
 }
 
+.videoDiv {
+  display: none;
+}
+
 .enteringTitles {
   margin: auto;
-  width: 90%;
+  width: 60%;
   padding-top: 20%; 
 }
 
@@ -28,7 +32,6 @@ body {
 }
 
 .innerTitle {
-  /* border: 2px solid #155C4D; */
   color: #155C4D;
   text-align: center;
   padding: 100px 25px;
