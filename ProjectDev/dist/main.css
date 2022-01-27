@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.videoDiv {
+  display: none;
+}
+
+.enteringTitles {
+  margin: auto;
+  width: 90%;
+  padding-top: 20%; 
+}
+
+.redaction {
+  font-family: 'Redacted', cursive;
+  text-align: left;
+}
+
+.innerTitle {
+  color: #155C4D;
+  text-align: center;
+  padding: 100px 25px;
+  font-weight: 300;
+  font-size: 12px;
+}
+
+/*# sourceMappingURL=main.css.map*/
