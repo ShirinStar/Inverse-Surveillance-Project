@@ -11,8 +11,6 @@ varying vec2 vUv;
 void main()
 {
 
- 
-
   float stripY = step(uWidthStripY, mod(vUv.x * uNumberOfStrips + 0.3, 1.0));
   stripY *= step(uLengthStripY, mod(vUv.y * uNumberOfStrips, 1.0));
 
@@ -33,6 +31,6 @@ void main()
 
   gl_FragColor = vec4(vec3(mixedColor), 1.0);
 
-  if(gl_FragColor.r<0.1 && gl_FragColor.b<0.1 && gl_FragColor.g<0.1) discard;
+  if(gl_FragColor.r < 0.03 && gl_FragColor.b < 0.03 && gl_FragColor.g < 0.03) discard;
 
 }

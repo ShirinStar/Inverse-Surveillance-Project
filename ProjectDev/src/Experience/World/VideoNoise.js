@@ -100,8 +100,8 @@ export default class VideoNoise {
     this.sound.setBuffer(buffer);
 
     // optional helper to visualize the cone shape
-    const helper = new PositionalAudioHelper(this.sound);
-    this.sound.add(helper);
+    //const helper = new PositionalAudioHelper(this.sound);
+    //this.sound.add(helper);
   }
 
   //animate shader
@@ -148,7 +148,6 @@ export default class VideoNoise {
   //control audio
   startAudio() {
     this.sound.play()
-    console.log(this.sound)
     this.audioIsPlaying = true
   }
 

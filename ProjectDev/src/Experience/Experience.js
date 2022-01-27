@@ -56,10 +56,11 @@ export default class Experience {
 
     button.addEventListener('click', async () => {
       console.log('enter AR')
+      
       titles.style.display = 'none'
+      
       //turn off sound when click again on stop AR
       this.world.webxr.soundOff()
-      //this.world.webxr.soundControl()
     })
 
     window.addEventListener('resize', () => {
@@ -87,10 +88,17 @@ export default class Experience {
 
   render(timestamp, frame) {
     const elapsedTime = this.clock.getElapsedTime()
-
-    if (this.world.webxr.videoOne) {
+   
+    if (this.world.webxr.videoOne !== undefined) {
       this.world.webxr.videoOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
-      this.world.webxr.videoOne.videoNoiseMaterial.needsUpdate = true;
+    }
+
+    if (this.world.webxr.videoTwo !== undefined) {
+      this.world.webxr.videoTwo.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+    }
+
+    if (this.world.webxr.videoThree !== undefined) {
+      this.world.webxr.videoThree.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.2
     }
 
     this.world.update()

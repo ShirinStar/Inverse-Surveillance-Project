@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Content from './World/Content.js';
 import gsap from 'gsap';
 import VideoNoise from './World/VideoNoise.js';
+import VideoStitch from './World/VideoStitch.js';
 
 export default class WebXR extends Content {
   constructor() {
@@ -15,6 +16,7 @@ export default class WebXR extends Content {
 
     this.videoOne;
     this.videoTwo;
+    this.videoThree;
 
   }
 
@@ -31,6 +33,7 @@ export default class WebXR extends Content {
       this.scene.add(mesh);
 
       this.videoOne.video.play()
+      this.videoOne.video.loop
       mesh.add(this.videoOne.sound)
       this.videoCount++
     }
@@ -45,7 +48,23 @@ export default class WebXR extends Content {
       this.scene.add(mesh);
 
       this.videoTwo.video.play()
+      this.videoTwo.video.loop
       mesh.add(this.videoTwo.sound)
+      this.videoCount++
+    }
+
+    else if (this.videoCount === 2) {
+      this.videoThree = new VideoStitch(this.videoThreeClassName, this.audioThree)
+
+      const mesh = this.videoThree.videoStitchMesh  
+      mesh.scale.multiplyScalar(0.2)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(this.controller.matrixWorld);
+      mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
+      this.scene.add(mesh);
+
+      this.videoThree.video.play()
+      this.videoThree.video.loop
+      mesh.add(this.videoThree.sound)
       this.videoCount++
     }
   }
@@ -62,6 +81,12 @@ export default class WebXR extends Content {
       if (this.videoTwo.audioIsInitialized) {
         this.videoTwo.sound.stop()
         this.videoTwo.audioIsPlaying = false;
+      }
+    }
+    if (this.videoThree) {
+      if (this.videoThree.audioIsInitialized) {
+        this.videoThree.sound.stop()
+        this.videoThree.audioIsPlaying = false;
       }
     }
   }
