@@ -50,7 +50,7 @@ export default class Experience {
       }
     });
     document.body.appendChild(button)
-    button.style.backgroundColor = 'black'
+    button.style.backgroundColor = '#155C4D'
 
     const titles = document.querySelector('.enteringTitles')
 

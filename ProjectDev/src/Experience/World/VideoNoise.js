@@ -127,6 +127,21 @@ export default class VideoNoise {
         duration: 30,
         value: 4
       })
+      gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
+        delay: 1,
+        duration: 30,
+        value: 5.0
+      })
+      gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
+        delay: 31,
+        duration: 30,
+        value: 2.0
+      })
+      gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
+        delay: 40,
+        duration: 90,
+        value: 10
+      })
     })
   }
 
