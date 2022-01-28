@@ -5,10 +5,10 @@ import gsap from 'gsap';
 import { PositionalAudioHelper } from 'three/examples/jsm/helpers/PositionalAudioHelper.js';
 
 export default class VideoStitch {
-  constructor(videoClassName, audioLink) {
-    
-   // this.camera = this.experience.camera
-    
+  constructor(camera, videoClassName, audioLink) {
+
+    this.camera = camera
+
     this.videoClass = videoClassName
     this.audio = audioLink
 
@@ -22,17 +22,14 @@ export default class VideoStitch {
     this.video.play()
     this.videoTexture = new THREE.VideoTexture(this.video)
 
-    
     this.setGeometry()
     this.setMaterial()
     this.setMesh()
 
     //this.setupAudio()
-    // this.soundControl()
+    this.soundControl()
 
     this.animateStitch()
-   
-   
   }
 
   setGeometry() {
@@ -63,56 +60,56 @@ export default class VideoStitch {
     // this.scene.add(this.videoStitchMesh)
   }
 
-  //  //audio setup
-  //  async setupAudio() {
-  //   this.listener = new THREE.AudioListener()
-  //   this.camera.add(this.listener);
+  //audio setup
+  async setupAudio() {
+    this.listener = new THREE.AudioListener()
+    this.camera.add(this.listener);
 
-  //   // this.setMesh()
-  //   await this.createPositionalAudio();
-  // }
+    // this.setMesh()
+    await this.createPositionalAudio();
+  }
 
-  // async createPositionalAudio() {
-  //   this.sound = new THREE.PositionalAudio(this.listener);
-  //   this.sound.setRefDistance(0.1); // the distance between sound and listener at which the volume reduction starts taking effect.
-  //   this.sound.setDistanceModel('linear'); // this has to be linear for the max distance to work
-  //   this.sound.setMaxDistance(1.8); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
-  //   this.sound.setLoop(true);
-  //   // Good definitions for what each of these are at
-  //   // https://stackoverflow.com/questions/36706118/use-three-js-positionalaudio-to-make-a-cone-of-sound
-  //   // coneInnerAngle, coneOuterAngle, coneOuterGain (from 0-1, 0 means no audio outside of cone)
-  //   this.sound.setDirectionalCone(230, 280, 0);
+  async createPositionalAudio() {
+    this.sound = new THREE.PositionalAudio(this.listener);
+    this.sound.setRefDistance(0.1); // the distance between sound and listener at which the volume reduction starts taking effect.
+    this.sound.setDistanceModel('linear'); // this has to be linear for the max distance to work
+    this.sound.setMaxDistance(1.8); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
+    this.sound.setLoop(true);
+    // Good definitions for what each of these are at
+    // https://stackoverflow.com/questions/36706118/use-three-js-positionalaudio-to-make-a-cone-of-sound
+    // coneInnerAngle, coneOuterAngle, coneOuterGain (from 0-1, 0 means no audio outside of cone)
+    this.sound.setDirectionalCone(230, 280, 0);
 
-  //   const audioLoader = new THREE.AudioLoader();
-  //   const buffer = await audioLoader.loadAsync(this.audio);
-  //   this.sound.setBuffer(buffer);
+    const audioLoader = new THREE.AudioLoader();
+    const buffer = await audioLoader.loadAsync(this.audio);
+    this.sound.setBuffer(buffer);
 
-  //   // optional helper to visualize the cone shape
-  //   //const helper = new PositionalAudioHelper(this.sound);
-  //   //this.sound.add(helper);
-  // }
+    // optional helper to visualize the cone shape
+    //const helper = new PositionalAudioHelper(this.sound);
+    //this.sound.add(helper);
+  }
 
-   //control audio
-  //  startAudio() {
-  //   this.sound.play()
-  //   this.audioIsPlaying = true
-  // }
+  //control audio
+  startAudio() {
+    this.sound.play()
+    this.audioIsPlaying = true
+  }
 
-  // stopAudio() {
-  //   if (this.audioIsInitialized) {
-  //     this.sound.stop()
-  //     this.audioIsPlaying = false;
-  //   }
-  // }
+  stopAudio() {
+    if (this.audioIsInitialized) {
+      this.sound.stop()
+      this.audioIsPlaying = false;
+    }
+  }
 
-  // async soundControl() {
-  //   if (!this.audioIsInitialized) {
-  //     await this.setupAudio()
-  //     this.audioIsInitialized = true
-  //     this.startAudio()
-  //     console.log("start audio")
-  //   }
-  // }
+  async soundControl() {
+    if (!this.audioIsInitialized) {
+      await this.setupAudio()
+      this.audioIsInitialized = true
+      this.startAudio()
+      console.log("start audio")
+    }
+  }
 
   animateStitch() {
     gsap.to(this.videoStitchMaterial.uniforms.uLengthStripX, {

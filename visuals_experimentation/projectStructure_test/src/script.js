@@ -7,15 +7,15 @@ import VideoStitch from './content/VideoStitch';
 
 let videoCount = 0;
 
-let videoOne;
+let videoOne = null
 const videoOneClassName = '.video.one'
 const audioOne = '../audio/alan_watts_short.mp3'
 
-let videoTwo;
+let videoTwo = null
 const videoTwoClassName = '.video.two'
 const audioTwo = '../audio/nina.mp3'
 
-let videoThree;
+let videoThree = null
 const videoThreeClassName = '.video.three'
 const audioThree = '../audio/Lynch.mp3'
 
@@ -68,12 +68,18 @@ const titles = document.querySelector('.enteringTitles')
 button.addEventListener('click', async () => {
   console.log('enter AR');
   titles.style.display = 'none'
+
+  if (videoOne || videoTwo || videoThree) {
+    videoOne.stopAudio()
+    videoTwo.stopAudio()
+    videoThree.stopAudio()
+  }
 })
 
 
 function onSelect() {
   if (videoCount === 0) {
-    videoOne = new VideoNoise(videoOneClassName, audioOne)
+    videoOne = new VideoNoise(camera, videoOneClassName, audioOne)
     videoOne.video.play()
 
     const mesh = videoOne.videoNoiseMesh
@@ -82,33 +88,33 @@ function onSelect() {
     mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
     scene.add(mesh);
 
-    //mesh.add(videoOne.sound)
+    mesh.add(videoOne.sound)
     videoCount++
   }
   else if (videoCount === 1) {
-    videoTwo = new VideoNoise(videoTwoClassName, audioTwo)
+    videoTwo = new VideoNoise(camera, videoTwoClassName, audioTwo)
     videoTwo.video.play()
 
-    const mesh = videoTwo.videoNoiseMesh  
+    const mesh = videoTwo.videoNoiseMesh
     mesh.scale.multiplyScalar(0.4)
     mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
     mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
     scene.add(mesh);
 
-    //mesh.add(videoTwo.sound)
+    mesh.add(videoTwo.sound)
     videoCount++
   }
   else if (videoCount === 2) {
-    videoThree = new VideoStitch(videoThreeClassName, audioThree)
+    videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
     videoThree.video.play()
 
-    const mesh = videoThree.videoStitchMesh  
+    const mesh = videoThree.videoStitchMesh
     mesh.scale.multiplyScalar(0.2)
     mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
     mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
     scene.add(mesh);
 
-    //mesh.add(videoThree.sound)
+    mesh.add(videoThree.sound)
     videoCount++
   }
 }
@@ -122,6 +128,18 @@ function animate() {
 
 function update() {
   const elapsedTime = clock.getElapsedTime()
+
+  if (videoOne !== null) {
+    videoOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+  }
+
+  if (videoTwo !== null) {
+    videoTwo.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+  }
+
+  if (videoThree !== null) {
+    videoThree.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.2
+  }
 
   renderer.render(scene, camera);
 }
