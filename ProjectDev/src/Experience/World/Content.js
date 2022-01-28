@@ -1,8 +1,4 @@
-import * as THREE from 'three'
 import Experience from "../Experience.js"
-import Tatreez from './Tatreez.js'
-import VideoStitch from './VideoStitch.js'
-
 
 export default class Content {
   constructor() {

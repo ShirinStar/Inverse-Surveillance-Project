@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
-import World from './World/World.js'
 import Debug from './Utils/Debug.js'
+import WebXR from './WebXR.js';
 
 let instance = null
 
@@ -12,11 +12,11 @@ export default class Experience {
     if (instance) {
       return instance
     }
-
+    
     instance = this
 
     //access in global scope
-    window.experience = this
+   // window.experience = this
 
     //setup
     this.debug = new Debug()
@@ -60,11 +60,10 @@ export default class Experience {
       titles.style.display = 'none'
       
       //turn off sound when click again on stop AR
-      this.world.webxr.soundOff()
+      this.webxr.soundOff()
     })
 
     window.addEventListener('resize', () => {
-      this.world.resize()
       this.sizes.width = window.innerWidth
       this.sizes.height = window.innerHeigh
       this.camera.aspect = this.sizes.width / this.sizes.height
@@ -74,7 +73,7 @@ export default class Experience {
     })
 
     //content
-    this.world = new World()
+    this.webxr = new WebXR()
 
     //animation
     this.clock = new THREE.Clock()
@@ -89,19 +88,17 @@ export default class Experience {
   render(timestamp, frame) {
     const elapsedTime = this.clock.getElapsedTime()
    
-    if (this.world.webxr.videoOne !== undefined) {
-      this.world.webxr.videoOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+    if (this.webxr.videoOne !== undefined) {
+      this.webxr.videoOne.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
     }
 
-    if (this.world.webxr.videoTwo !== undefined) {
-      this.world.webxr.videoTwo.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
+    if (this.webxr.videoTwo !== undefined) {
+      this.webxr.videoTwo.videoNoiseMaterial.uniforms.uTime.value = elapsedTime
     }
 
-    if (this.world.webxr.videoThree !== undefined) {
-      this.world.webxr.videoThree.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.2
+    if (this.webxr.videoThree !== undefined) {
+      this.webxr.videoThree.videoStitchMaterial.uniforms.uTime.value = elapsedTime * 0.2
     }
-
-    this.world.update()
 
     this.renderer.render(this.scene, this.camera)
   }

@@ -24,13 +24,14 @@ export default class VideoNoise {
     this.audioIsPlaying = false
 
     this.video = document.querySelector(this.videoClass)
+    this.video.play()
     this.videoTexture = new THREE.VideoTexture(this.video)
    
     this.setGeometry()
     this.setMaterial()
     this.setMesh()
 
-    this.setupAudio()
+    // this.setupAudio()
     this.soundControl()
 
     this.fadeIn()

@@ -21,10 +21,22 @@ export default class WebXR extends Content {
   }
 
   onSelect() {
-    //adding video to the scene in the position of the 'tap' and based on order
+    //test
+    // const geometry = new THREE.ConeGeometry( 0.1, 0.2, 32 ).rotateX(Math.PI / 2);;
+    // const material = new THREE.MeshBasicMaterial({
+    //   color      :  0xffffff * Math.random()
+    // });
+    // const mesh = new THREE.Mesh(geometry, material);
 
+    // mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( this.controller.matrixWorld );
+    // mesh.quaternion.setFromRotationMatrix( this.controller.matrixWorld );
+
+    // this.scene.add(mesh);
+
+    //adding video to the scene in the position of the 'tap' and based on order
     if (this.videoCount === 0) {
       this.videoOne = new VideoNoise(this.videoOneClassName, this.audioOne)
+      this.videoOne.video.play()
 
       const mesh = this.videoOne.videoNoiseMesh
       mesh.scale.multiplyScalar(0.4)
@@ -32,14 +44,13 @@ export default class WebXR extends Content {
       mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
       this.scene.add(mesh);
 
-      this.videoOne.video.play()
-      this.videoOne.video.loop
       mesh.add(this.videoOne.sound)
       this.videoCount++
     }
 
     else if (this.videoCount === 1) {
       this.videoTwo = new VideoNoise(this.videoTwoClassName, this.audioTwo)
+      this.videoTwo.video.play()
 
       const mesh = this.videoTwo.videoNoiseMesh  
       mesh.scale.multiplyScalar(0.4)
@@ -47,14 +58,13 @@ export default class WebXR extends Content {
       mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
       this.scene.add(mesh);
 
-      this.videoTwo.video.play()
-      this.videoTwo.video.loop
       mesh.add(this.videoTwo.sound)
       this.videoCount++
     }
 
     else if (this.videoCount === 2) {
       this.videoThree = new VideoStitch(this.videoThreeClassName, this.audioThree)
+      this.videoThree.video.play()
 
       const mesh = this.videoThree.videoStitchMesh  
       mesh.scale.multiplyScalar(0.2)
@@ -62,13 +72,10 @@ export default class WebXR extends Content {
       mesh.quaternion.setFromRotationMatrix(this.controller.matrixWorld);
       this.scene.add(mesh);
 
-      this.videoThree.video.play()
-      this.videoThree.video.loop
       mesh.add(this.videoThree.sound)
       this.videoCount++
     }
   }
-
 
   soundOff() {
     if (this.videoOne) {
