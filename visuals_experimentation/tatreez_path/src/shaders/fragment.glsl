@@ -5,8 +5,6 @@ varying float vOpacity;
 
 void main()
 {
- 
-  
   vec2 uv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
   vec2 centralUv = 2.0 * uv - 1.0;
   
@@ -21,10 +19,9 @@ void main()
 
   color *= vOpacity;
 
-  color.a = min(1.0, color.a)* 5.0;
+  color.a = min(1.0, color.a)* 10.0;
 
   float disc = length(centralUv);
-
 
   gl_FragColor = vec4(1.0 - disc, 0.0, 0.0, 1.0 )* vOpacity;
   gl_FragColor = vec4(color.rgb, color.a);

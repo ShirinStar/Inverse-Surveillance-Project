@@ -160,7 +160,7 @@ let skyMaterialArray = [
   }),
 ];
 let skyMesh = new THREE.Mesh(
-  new THREE.BoxBufferGeometry(15, 15, 15),
+  new THREE.BoxBufferGeometry(20, 15, 50),
   skyMaterialArray);
 
 skyMesh.rotation.x = -Math.PI * 0.25
