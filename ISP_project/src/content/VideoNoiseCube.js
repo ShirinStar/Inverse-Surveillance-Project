@@ -33,7 +33,7 @@ export default class VideoNoise {
   }
 
   setGeometry() {
-    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 0.05, 480 / 2, 360 / 2, 480 / 2)
+    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 1, 480 / 2, 360 / 2, 480 / 2)
   }
 
   setMaterial() {
@@ -52,8 +52,9 @@ export default class VideoNoise {
 
   setMesh() {
     this.videoNoiseMesh = new THREE.Points(this.videoGeometry, this.videoNoiseMaterial)
-    // this.videoNoiseMesh.scale.multiplyScalar(0.3)
+    //this.videoNoiseMesh.scale.multiplyScalar(0.3)
     // this.videoNoiseMesh.position.z = -.5
+    // this.videoNoiseMesh.position.y = 1
     // this.scene.add(this.videoNoiseMesh)
   }
 
@@ -70,20 +71,20 @@ export default class VideoNoise {
     this.sound = new THREE.PositionalAudio(this.listener);
     this.sound.setRefDistance(0.1); // the distance between sound and listener at which the volume reduction starts taking effect.
     this.sound.setDistanceModel('linear'); // this has to be linear for the max distance to work
-    this.sound.setMaxDistance(1.8); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
+    this.sound.setMaxDistance(2); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
     this.sound.setLoop(true);
     // Good definitions for what each of these are at
     // https://stackoverflow.com/questions/36706118/use-three-js-positionalaudio-to-make-a-cone-of-sound
     // coneInnerAngle, coneOuterAngle, coneOuterGain (from 0-1, 0 means no audio outside of cone)
-    this.sound.setDirectionalCone(230, 280, 0);
+    this.sound.setDirectionalCone(360, 360, 0);
 
     const audioLoader = new THREE.AudioLoader();
     const buffer = await audioLoader.loadAsync(this.audio);
     this.sound.setBuffer(buffer);
 
     // optional helper to visualize the cone shape
-    // const helper = new PositionalAudioHelper(this.sound);
-    // this.sound.add(helper);
+    const helper = new PositionalAudioHelper(this.sound);
+    this.sound.add(helper);
   }
 
   //start animate shader
