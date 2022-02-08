@@ -17,7 +17,7 @@ const raycaster = new THREE.Raycaster();
 let savedIntersectedObject = null;
 
 //videos setting
-let videoPositionY = Math.random() + 0.2
+let videoPositionY = Math.random() + 0.1
 let videoCount = 0;
 
 let videoOne = null
@@ -67,7 +67,6 @@ controller.addEventListener('select', onSelect);
 scene.add(controller);
 
 const button = ARButton.createButton(renderer, {
-  requiredFeatures: ["hit-test"],
   optionalFeatures: ["dom-overlay", "dom-overlay-for-handheld-ar"],
   domOverlay: {
     root: document.body
@@ -98,80 +97,48 @@ button.addEventListener('click', async () => {
   }
 })
 
-addReticleToScene()
-
-function addReticleToScene() {
-  const geometry = new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2)
-  const material = new THREE.MeshBasicMaterial()
-  reticle = new THREE.Mesh(geometry, material)
-  reticle.matrixAutoUpdate = false
-  reticle.visible = false // we start with the reticle not visible
-  scene.add(reticle)
-
-  // optional axis helper you can add to an object
-  // reticle.add(new THREE.AxesHelper(1));
-}
 
 //adding object with a tap
 function onSelect() {
-  if (reticle.visible) {
-    if (videoCount === 0) {
-      videoOne = new VideoNoise(camera, videoOneClassName, audioOne)
-      videoOne.video.play()
+  if (videoCount === 0) {
+    videoOne = new VideoNoise(camera, videoOneClassName, audioOne)
+    videoOne.video.play()
 
-      const mesh = videoOne.videoNoiseMesh
-      mesh.scale.multiplyScalar(0.4)
-      mesh.position.set(0, videoPositionY, - 0.2).applyMatrix4(reticle.matrixWorld);
-      mesh.quaternion.setFromRotationMatrix(reticle.matrixWorld);
-      scene.add(mesh);
+    const mesh = videoOne.videoNoiseMesh
+    mesh.scale.multiplyScalar(0.4)
+    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
+    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+    scene.add(mesh);
 
-      mesh.add(videoOne.sound)
-      videoCount++
-    }
-    else if (videoCount === 1) {
-      videoTwo = new VideoNoiseCube(camera, videoTwoClassName, audioTwo)
-      videoTwo.video.play()
-
-      const mesh = videoTwo.videoNoiseMesh
-      mesh.scale.multiplyScalar(0.4)
-      mesh.position.set(0, videoPositionY, - 0.2).applyMatrix4(reticle.matrixWorld);
-      mesh.quaternion.setFromRotationMatrix(reticle.matrixWorld);
-      scene.add(mesh);
-
-      mesh.add(videoTwo.sound)
-      videoCount++
-    }
-    else if (videoCount === 2) {
-      videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
-      videoThree.video.play()
-
-      const mesh = videoThree.videoStitchMesh
-      mesh.scale.multiplyScalar(0.15)
-      mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
-      mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-      scene.add(mesh);
-
-      mesh.add(videoThree.sound)
-      videoCount++
-    }
+    mesh.add(videoOne.sound)
+    videoCount++
   }
-}
+  else if (videoCount === 1) {
+    videoTwo = new VideoNoiseCube(camera, videoTwoClassName, audioTwo)
+    videoTwo.video.play()
 
-async function initializeHitTestSource() {
-  const session = renderer.xr.getSession() 
-  // For hit testing, we use the "viewer" reference space, which is based on the device's pose at the time of the hit test.
-  const viewerSpace = await session.requestReferenceSpace("viewer")
-  hitTestSource = await session.requestHitTestSource({ space: viewerSpace })
+    const mesh = videoTwo.videoNoiseMesh
+    mesh.scale.multiplyScalar(0.4)
+    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
+    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+    scene.add(mesh);
 
-  localSpace = await session.requestReferenceSpace("local")
+    mesh.add(videoTwo.sound)
+    videoCount++
+  }
+  else if (videoCount === 2) {
+    videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
+    videoThree.video.play()
 
-  hitTestSourceInitialized = true
+    const mesh = videoThree.videoStitchMesh
+    mesh.scale.multiplyScalar(0.15)
+    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
+    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+    scene.add(mesh);
 
-  // In case we close the AR session by hitting the button "End AR"
-  session.addEventListener("end", () => {
-    hitTestSourceInitialized = false
-    hitTestSource = null
-  });
+    mesh.add(videoThree.sound)
+    videoCount++
+  }
 }
 
 
@@ -183,28 +150,8 @@ function animate() {
 
 function render(timestamp, frame) {
   const elapsedTime = clock.getElapsedTime()
-  if (frame) {
-    // this gets called only once
-    if (!hitTestSourceInitialized) {
-      initializeHitTestSource()
-    }
-    if (hitTestSourceInitialized) {
-      // we get the hit test results for a particular frame
-      const hitTestResults = frame.getHitTestResults(hitTestSource);
 
-      // XRHitTestResults The hit test may find multiple surfaces. The first one in the array is the one closest to the camera.
-      if (hitTestResults.length > 0) {
-        const hit = hitTestResults[0];
-        const pose = hit.getPose(localSpace);
-
-        reticle.visible = true;
-        reticle.matrix.fromArray(pose.transform.matrix);
-      } else {
-        reticle.visible = false;
-      }
-    }
-    renderer.render(scene, camera);
-  }
+  renderer.render(scene, camera)
 }
 
 animate()

@@ -52,9 +52,8 @@ export default class VideoNoise {
 
   setMesh() {
     this.videoNoiseMesh = new THREE.Points(this.videoGeometry, this.videoNoiseMaterial)
-    //this.videoNoiseMesh.scale.multiplyScalar(0.3)
-    // this.videoNoiseMesh.position.z = -.5
-    // this.videoNoiseMesh.position.y = 1
+    this.videoNoiseMesh.scale.multiplyScalar(0.3)
+    this.videoNoiseMesh.position.z = -.5
     // this.scene.add(this.videoNoiseMesh)
   }
 
