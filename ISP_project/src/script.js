@@ -4,6 +4,7 @@ import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import gsap from 'gsap';
 import VideoNoise from './content/VideoNoise.js';
 import VideoNoiseCube from './content/VideoNoiseCube.js';
+import VideoNoiseMeshCube from './content/VideoNoiseMeshCube.js';
 import VideoStitch from './content/VideoStitch.js';
 
 //hittest setting
@@ -15,6 +16,7 @@ let reticle;
 //raycaster setting
 const raycaster = new THREE.Raycaster();
 let savedIntersectedObject = null;
+const objectsToIntersect = []
 
 //videos setting
 let videoPositionY = Math.random() + 0.1
@@ -101,43 +103,50 @@ button.addEventListener('click', async () => {
 //adding object with a tap
 function onSelect() {
   if (videoCount === 0) {
-    videoOne = new VideoNoise(camera, videoOneClassName, audioOne)
+    videoOne = new VideoNoiseMeshCube(camera, videoOneClassName, audioOne)
     videoOne.video.play()
 
     const mesh = videoOne.videoNoiseMesh
     mesh.scale.multiplyScalar(0.4)
-    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
-    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-    scene.add(mesh);
+    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld)
+    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld)
+    mesh.name = 'video1'
+    scene.add(mesh)
+
+    objectsToIntersect.push(mesh)
 
     mesh.add(videoOne.sound)
     videoCount++
   }
   else if (videoCount === 1) {
-    videoTwo = new VideoNoiseCube(camera, videoTwoClassName, audioTwo)
+    videoTwo = new VideoNoiseMeshCube(camera, videoTwoClassName, audioTwo)
     videoTwo.video.play()
 
     const mesh = videoTwo.videoNoiseMesh
+    
     mesh.scale.multiplyScalar(0.4)
-    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
-    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-    scene.add(mesh);
+    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld)
+    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld)
+    mesh.name = 'video2'
+    scene.add(mesh)
+
+    objectsToIntersect.push(mesh)
 
     mesh.add(videoTwo.sound)
     videoCount++
   }
   else if (videoCount === 2) {
-    videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
-    videoThree.video.play()
+    // videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
+    // videoThree.video.play()
 
-    const mesh = videoThree.videoStitchMesh
-    mesh.scale.multiplyScalar(0.15)
-    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
-    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-    scene.add(mesh);
+    // const mesh = videoThree.videoStitchMesh
+    // mesh.scale.multiplyScalar(0.15)
+    // mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
+    // mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+    // scene.add(mesh);
 
-    mesh.add(videoThree.sound)
-    videoCount++
+    // mesh.add(videoThree.sound)
+    // videoCount++
   }
 }
 
@@ -151,6 +160,15 @@ function animate() {
 function render(timestamp, frame) {
   const elapsedTime = clock.getElapsedTime()
 
+    //raycaster setting based on camera dir/pos 
+    const cameraDirection = getCameraDirectionNormalized(); //length = 1
+    const cameraPosition = getCameraPosition()
+    raycaster.set(cameraPosition, cameraDirection)
+
+    const intersectsArray = raycaster.intersectObjects(objectsToIntersect)
+
+
+  //console.log(intersectsArray);
   renderer.render(scene, camera)
 }
 
