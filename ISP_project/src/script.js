@@ -11,7 +11,7 @@ import VideoStitchCube from './content/VideoStitchCube.js';
 let hitTestSource = null;
 let localSpace = null;
 let hitTestSourceInitialized = false;
-let reticle;
+let hitTestMarker;
 
 //raycaster setting
 const raycaster = new THREE.Raycaster();
@@ -69,6 +69,7 @@ controller.addEventListener('select', onSelect);
 scene.add(controller);
 
 const button = ARButton.createButton(renderer, {
+  requiredFeatures: ["hit-test"],
   optionalFeatures: ["dom-overlay", "dom-overlay-for-handheld-ar"],
   domOverlay: {
     root: document.body
@@ -99,48 +100,54 @@ button.addEventListener('click', async () => {
   }
 })
 
+addHittestMarkerToScene()
+
+function addHittestMarkerToScene() {
+  const geometry = new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(
+    -Math.PI / 2
+  );
+  const material = new THREE.MeshBasicMaterial()
+  hitTestMarker = new THREE.Mesh(geometry, material)
+
+  hitTestMarker.matrixAutoUpdate = false
+  hitTestMarker.visible = false
+  scene.add(hitTestMarker)
+
+  // optional axis helper you can add to an object
+  // hitTestMarker.add(new THREE.AxesHelper(1));
+}
+
 
 //adding object with a tap
 function onSelect() {
-  if (videoCount === 0) {
-    videoOne = new VideoNoiseMeshCube(camera, videoOneClassName, audioOne)
-    const mesh = videoOne.videoNoiseMesh
-    mesh.scale.multiplyScalar(0.4)
-    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld)
-    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld)
-    mesh.name = 'video1'
-    scene.add(mesh)
-    mesh.add(videoOne.sound)
+  if (hitTestMarker.visible) {
+    if (videoCount === 0) {
+      videoOne = new VideoNoiseMeshCube(camera, videoOneClassName, audioOne)
+      const mesh = videoOne.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video1'
+      scene.add(mesh)
+      mesh.add(videoOne.sound)
 
-    objectsToIntersect.push(mesh)
-    videoCount++    
+      objectsToIntersect.push(mesh)
+      videoCount++
+    }
+    else if (videoCount === 1) {
+      videoTwo = new VideoStitchCube(camera, videoTwoClassName, audioTwo)
+      const mesh = videoTwo.videoStitchMesh
+      // mesh.scale.multiplyScalar(0.2)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video2'
+      scene.add(mesh)
+      mesh.add(videoTwo.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+    }
   }
-  else if (videoCount === 1) {
-    videoTwo = new VideoStitchCube(camera, videoTwoClassName, audioTwo)
-    const mesh = videoTwo.videoStitchMesh
-    mesh.scale.multiplyScalar(0.2)
-    mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld)
-    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld)
-    mesh.name = 'video2'
-    scene.add(mesh)
-    mesh.add(videoTwo.sound)
-    
-    objectsToIntersect.push(mesh)
-    videoCount++
-  }
-  // else if (videoCount === 2) {
-  // videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
-  // videoThree.video.play()
-
-  // const mesh = videoThree.videoStitchMesh
-  // mesh.scale.multiplyScalar(0.15)
-  // mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
-  // mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-  // scene.add(mesh);
-
-  // mesh.add(videoThree.sound)
-  // videoCount++
-  // }
 }
 
 
@@ -153,56 +160,99 @@ function animate() {
 function render(timestamp, frame) {
   const elapsedTime = clock.getElapsedTime()
 
-  //raycaster setting based on camera dir/pos 
-  const cameraDirection = getCameraDirectionNormalized(); //length = 1
-  const cameraPosition = getCameraPosition()
-  raycaster.set(cameraPosition, cameraDirection)
+  //hitTest setting
+  if (frame) {
+    // create a hit test source once and keep it for all the frames
+    if (!hitTestSourceInitialized) {
+      initializeHitTestSource()
+    }
+    //get hit test results
+    if (hitTestSourceInitialized) {
+      const hitTestResults = frame.getHitTestResults(hitTestSource);
 
-  const intersectsArray = raycaster.intersectObjects(objectsToIntersect)
+      // XRHitTestResults The hit test may find multiple surfaces. The first one in the array is the one closest to the camera.
+      if (hitTestResults.length > 0) {
+        const hit = hitTestResults[0]
+        // The pose represents the pose of a point on a surface.
+        const pose = hit.getPose(localSpace)
 
-  //playing/pausing videos depands on Raycaster
-  if (intersectsArray.length > 0) {
-    for (const intersectObject of intersectsArray) {
-
-      //if the raycaster detect first object and not the one behind it
-      if (intersectObject.object !== savedIntersectedObject && savedIntersectedObject !== null) {
-        if (savedIntersectedObject.name == 'video1') {
-          videoOne.video.pause()
-        }
-        else if (savedIntersectedObject.name == 'video2') {
-          videoTwo.video.pause()
-        }
-        savedIntersectedObject = null;
-      }
-
-      //if the object is a mesh (i.e. a cube) we want to play the video
-      if (intersectObject.object instanceof THREE.Mesh) {
-        savedIntersectedObject = intersectObject.object
-
-        if (savedIntersectedObject.name == 'video1') {
-          videoOne.video.play()
-        }
-        else if (savedIntersectedObject.name == 'video2') {
-          videoTwo.video.play()
-        }
+        hitTestMarker.visible = true
+        hitTestMarker.matrix.fromArray(pose.transform.matrix);
+      } else {
+        hitTestMarker.visible = false;
       }
     }
-  } else {
-    // if we have a last saved object, but our ray isn't currently selecting anything then we have to pause back the video
-    if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video1') {
-      videoOne.video.pause()
+
+    //raycaster setting based on camera dir/pos 
+    const cameraDirection = getCameraDirectionNormalized(); //length = 1
+    const cameraPosition = getCameraPosition()
+    raycaster.set(cameraPosition, cameraDirection)
+
+    const intersectsArray = raycaster.intersectObjects(objectsToIntersect)
+
+    //playing/pausing videos depands on Raycaster
+    if (intersectsArray.length > 0) {
+      for (const intersectObject of intersectsArray) {
+
+        //if the raycaster detect first object and not the one behind it
+        if (intersectObject.object !== savedIntersectedObject && savedIntersectedObject !== null) {
+          if (savedIntersectedObject.name == 'video1') {
+            videoOne.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video2') {
+            videoTwo.video.pause()
+          }
+          savedIntersectedObject = null;
+        }
+
+        //if the object is a mesh we want to play the video
+        if (intersectObject.object instanceof THREE.Mesh) {
+          savedIntersectedObject = intersectObject.object
+
+          if (savedIntersectedObject.name == 'video1') {
+            videoOne.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video2') {
+            videoTwo.video.play()
+          }
+        }
+      }
+    } else {
+      // if we have a last saved object, but our ray isn't currently selecting anything then we have to pause back the video
+      if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video1') {
+        videoOne.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video2') {
+        videoTwo.video.pause()
+      }
+      savedIntersectedObject = null
     }
-    else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video2') {
-      videoTwo.video.pause()
-    }
-    savedIntersectedObject = null
+
+    renderer.render(scene, camera)
   }
-
-
-  renderer.render(scene, camera)
 }
 
 animate()
+
+//Hittest reference space calculations
+async function initializeHitTestSource() {
+  const session = renderer.xr.getSession()
+
+  // "viewer" reference space is based on the device's pose at the time of the hit test.
+  const viewerSpace = await session.requestReferenceSpace("viewer");
+  hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
+
+  localSpace = await session.requestReferenceSpace("local");
+
+  // set this to true so we don't request another hit source for the rest of the session
+  hitTestSourceInitialized = true;
+
+  // In case we close the AR session by hitting the button "End AR"
+  session.addEventListener("end", () => {
+    hitTestSourceInitialized = false;
+    hitTestSource = null;
+  });
+}
 
 
 /* Helper Raycaster functions calculating refernce distance and oriantation */
