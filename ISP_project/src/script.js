@@ -19,10 +19,11 @@ let savedIntersectedObject = null;
 const objectsToIntersect = []
 
 //videos setting
-let videoPositionY = Math.random() + 0.1
+let videoPositionY = Math.random() + 0.15
 let videoCount = 0;
 
 let videoOne = null
+let mesh1;
 const videoOneClassName = '.video.one'
 const audioOne = '../audio/alan_watts_short.mp3'
 
@@ -100,25 +101,10 @@ button.addEventListener('click', async () => {
   }
 })
 
-addHittestMarkerToScene()
 
-function addHittestMarkerToScene() {
-  const geometry = new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(
-    -Math.PI / 2
-  );
-  const material = new THREE.MeshBasicMaterial()
-  hitTestMarker = new THREE.Mesh(geometry, material)
-
-  hitTestMarker.matrixAutoUpdate = false
-  hitTestMarker.visible = false
-  scene.add(hitTestMarker)
-
-  // optional axis helper you can add to an object
-  // hitTestMarker.add(new THREE.AxesHelper(1));
-}
-
-
-//adding object with a tap
+/*******************/
+/* Videos *///adding object with a tap
+/*******************/
 function onSelect() {
   if (hitTestMarker.visible) {
     if (videoCount === 0) {
@@ -133,11 +119,18 @@ function onSelect() {
 
       objectsToIntersect.push(mesh)
       videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.1
+      })
+
     }
     else if (videoCount === 1) {
       videoTwo = new VideoStitchCube(camera, videoTwoClassName, audioTwo)
       const mesh = videoTwo.videoStitchMesh
-      // mesh.scale.multiplyScalar(0.2)
+      mesh.scale.multiplyScalar(0.5)
       mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
       mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
       mesh.name = 'video2'
@@ -146,22 +139,25 @@ function onSelect() {
 
       objectsToIntersect.push(mesh)
       videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 0.5,
+        duration: 5,
+        y: Math.random() - 0.1
+      })
     }
   }
 }
-
-
-const clock = new THREE.Clock()
 
 function animate() {
   renderer.setAnimationLoop(render);
 }
 
 function render(timestamp, frame) {
-  const elapsedTime = clock.getElapsedTime()
-
-  //hitTest setting
   if (frame) {
+    /*******************/
+    /* Hit testing */
+    /*******************/
     // create a hit test source once and keep it for all the frames
     if (!hitTestSourceInitialized) {
       initializeHitTestSource()
@@ -182,7 +178,9 @@ function render(timestamp, frame) {
         hitTestMarker.visible = false;
       }
     }
-
+    /*******************/
+    /* Raycast code */
+    /*******************/
     //raycaster setting based on camera dir/pos 
     const cameraDirection = getCameraDirectionNormalized(); //length = 1
     const cameraPosition = getCameraPosition()
@@ -234,6 +232,23 @@ function render(timestamp, frame) {
 
 animate()
 
+/*******************/
+/* Hittest code */
+/*******************/
+addHittestMarkerToScene()
+
+function addHittestMarkerToScene() {
+  const geometry = new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(
+    -Math.PI / 2
+  );
+  const material = new THREE.MeshBasicMaterial()
+  hitTestMarker = new THREE.Mesh(geometry, material)
+
+  hitTestMarker.matrixAutoUpdate = false
+  hitTestMarker.visible = false
+  scene.add(hitTestMarker)
+}
+
 //Hittest reference space calculations
 async function initializeHitTestSource() {
   const session = renderer.xr.getSession()
@@ -244,17 +259,17 @@ async function initializeHitTestSource() {
 
   localSpace = await session.requestReferenceSpace("local");
 
-  // set this to true so we don't request another hit source for the rest of the session
-  hitTestSourceInitialized = true;
+  hitTestSourceInitialized = true  // set this to true so we don't request another hit source for the rest of the session
 
-  // In case we close the AR session by hitting the button "End AR"
   session.addEventListener("end", () => {
     hitTestSourceInitialized = false;
     hitTestSource = null;
   });
 }
 
-
+/*******************/
+/* Raycast code */
+/*******************/
 /* Helper Raycaster functions calculating refernce distance and oriantation */
 function getCameraPosition() {
   return camera.position;

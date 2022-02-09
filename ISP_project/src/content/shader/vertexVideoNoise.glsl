@@ -103,7 +103,7 @@ void main()
     vec3 distotion = vec3(position.x * 2.6, position.y * 2.0, position.z * 10.0) 
     * vec3(cnoise(vec3(
       position.x, 
-      position.y, 
+      position.y * -2., 
       position.z  * 10. + uTime * 0.05
     ))) * uRange;    
 
