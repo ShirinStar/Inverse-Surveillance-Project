@@ -100,6 +100,7 @@ void main()
     vPosition = position;
     //distortion multiples the position in noise position vector * time
     //to the bubbly effect replace the z with uTime multiple
+    //if working on particles take out the -2. from the y
     vec3 distotion = vec3(position.x * 2.6, position.y * 2.0, position.z * 10.0) 
     * vec3(cnoise(vec3(
       position.x, 

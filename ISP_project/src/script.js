@@ -2,10 +2,10 @@ import './style.css'
 import * as THREE from 'three'
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import gsap from 'gsap';
-import VideoNoise from './content/VideoNoise.js';
-import VideoNoiseCube from './content/VideoNoiseCube.js';
 import VideoNoiseMeshCube from './content/VideoNoiseMeshCube.js';
 import VideoStitchCube from './content/VideoStitchCube.js';
+import MarkerFragment from './content/shader/fragmentSquare.glsl'
+import MarkerVertex from './content/shader/vertexSquare.glsl'
 
 //hittest setting
 let hitTestSource = null;
@@ -123,7 +123,7 @@ function onSelect() {
       gsap.to(mesh.position, {
         delay: 2,
         duration: 5,
-        y: Math.random() - 0.1
+        y: Math.random() - 0.3
       })
 
     }
@@ -143,7 +143,7 @@ function onSelect() {
       gsap.to(mesh.position, {
         delay: 0.5,
         duration: 5,
-        y: Math.random() - 0.1
+        y: Math.random() - 0.3
       })
     }
   }
@@ -238,10 +238,11 @@ animate()
 addHittestMarkerToScene()
 
 function addHittestMarkerToScene() {
-  const geometry = new THREE.RingBufferGeometry(0.15, 0.2, 32).rotateX(
-    -Math.PI / 2
-  );
-  const material = new THREE.MeshBasicMaterial()
+  const geometry = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
+  const material = new THREE.ShaderMaterial({
+    vertexShader: MarkerVertex,
+    fragmentShader: MarkerFragment
+  })
   hitTestMarker = new THREE.Mesh(geometry, material)
 
   hitTestMarker.matrixAutoUpdate = false
