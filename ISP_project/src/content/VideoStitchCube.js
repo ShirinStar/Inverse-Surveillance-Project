@@ -1,11 +1,12 @@
 import * as THREE from 'three';
-import vertexShader from './shader/vertexVideoNoise.glsl';
-import fragmentShader from './shader/fragmentVideoNoise.glsl';
+import vertexShader from './shader/vertexStitch.glsl';
+import fragmentShader from './shader/fragmentStitch.glsl';
 import gsap from 'gsap';
 import { PositionalAudioHelper } from 'three/examples/jsm/helpers/PositionalAudioHelper.js';
 
-export default class VideoNoise {
+export default class VideoStitch {
   constructor(camera, videoClassName, audioLink) {
+
     this.camera = camera
 
     this.videoClass = videoClassName
@@ -25,37 +26,37 @@ export default class VideoNoise {
     this.setMaterial()
     this.setMesh()
 
-    // this.setupAudio()
     this.soundControl()
 
-    this.fadeIn()
-    //this.animateEnding()
+    this.animateStitch()
   }
 
   setGeometry() {
-    this.videoGeometry = new THREE.BoxGeometry(1.3, 1, 1, 480 / 2, 360 / 2, 480 / 2)
+    this.videoGeometry = new THREE.BoxGeometry(1, 1, 1, 32, 32);
   }
 
   setMaterial() {
-    this.videoNoiseMaterial = new THREE.ShaderMaterial({
+    this.videoStitchMaterial = new THREE.ShaderMaterial({
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
+      side: THREE.DoubleSide,
       uniforms: {
         uTime: { value: 0 },
-        uPointSize: { value: .01 },
-        uRange: { value: 1.5 },
-        uOpacity: {value: 0.05},
         uTexture: { value: this.videoTexture },
-        uResolution: { value: new THREE.Vector4() }
+        uLengthStripX: { value: 0.99 },
+        uLengthStripY: { value: 0.99 },
+        uWidthStripX: { value: 0.99 },
+        uWidthStripY: { value: 0.99 },
+        uNumberOfStrips: { value: 25 },
       },
     })
+
   }
 
   setMesh() {
-    this.videoNoiseMesh = new THREE.Mesh(this.videoGeometry, this.videoNoiseMaterial)
-    this.videoNoiseMesh.scale.multiplyScalar(0.3)
-    this.videoNoiseMesh.position.z = -.5
-    // this.scene.add(this.videoNoiseMesh)
+    this.videoStitchMesh = new THREE.Mesh(this.videoGeometry, this.videoStitchMaterial);
+    this.videoStitchMesh.position.z = 0.5;
+    // this.scene.add(this.videoStitchMesh)
   }
 
   //audio setup
@@ -71,83 +72,33 @@ export default class VideoNoise {
     this.sound = new THREE.PositionalAudio(this.listener);
     this.sound.setRefDistance(0.1); // the distance between sound and listener at which the volume reduction starts taking effect.
     this.sound.setDistanceModel('linear'); // this has to be linear for the max distance to work
-    this.sound.setMaxDistance(2); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
+    this.sound.setMaxDistance(1.8); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
     this.sound.setLoop(true);
     // Good definitions for what each of these are at
     // https://stackoverflow.com/questions/36706118/use-three-js-positionalaudio-to-make-a-cone-of-sound
     // coneInnerAngle, coneOuterAngle, coneOuterGain (from 0-1, 0 means no audio outside of cone)
-    this.sound.setDirectionalCone(360, 360, 0);
+    this.sound.setDirectionalCone(230, 280, 0);
 
     const audioLoader = new THREE.AudioLoader();
     const buffer = await audioLoader.loadAsync(this.audio);
     this.sound.setBuffer(buffer);
 
     // optional helper to visualize the cone shape
-    // const helper = new PositionalAudioHelper(this.sound);
-    // this.sound.add(helper);
+    //const helper = new PositionalAudioHelper(this.sound);
+    //this.sound.add(helper);
   }
-
-  //start animate shader
-  fadeIn() {
-    gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
-      duration: 5,
-      value: 0,
-      onComplete: () => {
-        this.video.play()
-      }
-    })
-    gsap.to(this.videoNoiseMaterial.uniforms.uOpacity, {
-      delay: 2,
-      duration: 10,
-      value: 1.0
-    })
-  }
-
-  // animateEnding() {
-  //   this.video.addEventListener('ended', () => {
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
-  //       delay: 0.2,
-  //       duration: 30,
-  //       value: 4
-  //     })
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
-  //       delay: 1,
-  //       duration: 30,
-  //       value: 5.0
-  //     })
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
-  //       delay: 31,
-  //       duration: 30,
-  //       value: 2.0
-  //     })
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
-  //       delay: 40,
-  //       duration: 90,
-  //       value: 10
-  //     })
-  //   })
-  // }
 
   //control audio
   startAudio() {
     this.sound.play()
     this.audioIsPlaying = true
+
   }
 
   stopAudio() {
     if (this.audioIsInitialized) {
       this.sound.stop()
       this.audioIsPlaying = false;
-    }
-  }
-
-  toggleAudio() {
-    if (this.audioIsInitialized) {
-      if (!this.audioIsPlaying) {
-        this.startAudio()
-      } else {
-        this.stopAudio()
-      }
     }
   }
 
@@ -160,4 +111,33 @@ export default class VideoNoise {
     }
   }
 
+  animateStitch() {
+    gsap.to(this.videoStitchMaterial.uniforms.uLengthStripX, {
+      duration: 7,
+      value: 0.01,
+    })
+    gsap.to(this.videoStitchMaterial.uniforms.uLengthStripY, {
+      delay: 2,
+      duration: 5,
+      value: 0.01,
+      onComplete: () => {
+        this.video.play()
+      }
+    })
+    gsap.to(this.videoStitchMaterial.uniforms.uWidthStripX, {
+      delay: 4,
+      duration: 5,
+      value: 0.7,
+    })
+    gsap.to(this.videoStitchMaterial.uniforms.uWidthStripY, {
+      delay: 5,
+      duration: 5,
+      value: 0.4,
+    })
+    gsap.to(this.videoStitchMaterial.uniforms.uWidthStripX, {
+      delay: 8,
+      duration: 5,
+      value: 0.1,
+    })
+  }
 }

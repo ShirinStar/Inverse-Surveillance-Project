@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import VideoNoise from './content/VideoNoise.js';
 import VideoNoiseCube from './content/VideoNoiseCube.js';
 import VideoNoiseMeshCube from './content/VideoNoiseMeshCube.js';
-import VideoStitch from './content/VideoStitch.js';
+import VideoStitchCube from './content/VideoStitchCube.js';
 
 //hittest setting
 let hitTestSource = null;
@@ -104,50 +104,43 @@ button.addEventListener('click', async () => {
 function onSelect() {
   if (videoCount === 0) {
     videoOne = new VideoNoiseMeshCube(camera, videoOneClassName, audioOne)
-    videoOne.video.play()
-
     const mesh = videoOne.videoNoiseMesh
     mesh.scale.multiplyScalar(0.4)
     mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld)
     mesh.quaternion.setFromRotationMatrix(controller.matrixWorld)
     mesh.name = 'video1'
     scene.add(mesh)
+    mesh.add(videoOne.sound)
 
     objectsToIntersect.push(mesh)
-
-    mesh.add(videoOne.sound)
-    videoCount++
+    videoCount++    
   }
   else if (videoCount === 1) {
-    videoTwo = new VideoNoiseMeshCube(camera, videoTwoClassName, audioTwo)
-    videoTwo.video.play()
-
-    const mesh = videoTwo.videoNoiseMesh
-    
-    mesh.scale.multiplyScalar(0.4)
+    videoTwo = new VideoStitchCube(camera, videoTwoClassName, audioTwo)
+    const mesh = videoTwo.videoStitchMesh
+    mesh.scale.multiplyScalar(0.2)
     mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld)
     mesh.quaternion.setFromRotationMatrix(controller.matrixWorld)
     mesh.name = 'video2'
     scene.add(mesh)
-
-    objectsToIntersect.push(mesh)
-
     mesh.add(videoTwo.sound)
+    
+    objectsToIntersect.push(mesh)
     videoCount++
   }
-  else if (videoCount === 2) {
-    // videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
-    // videoThree.video.play()
+  // else if (videoCount === 2) {
+  // videoThree = new VideoStitch(camera, videoThreeClassName, audioThree)
+  // videoThree.video.play()
 
-    // const mesh = videoThree.videoStitchMesh
-    // mesh.scale.multiplyScalar(0.15)
-    // mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
-    // mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-    // scene.add(mesh);
+  // const mesh = videoThree.videoStitchMesh
+  // mesh.scale.multiplyScalar(0.15)
+  // mesh.position.set(0, 0, - 0.2).applyMatrix4(controller.matrixWorld);
+  // mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+  // scene.add(mesh);
 
-    // mesh.add(videoThree.sound)
-    // videoCount++
-  }
+  // mesh.add(videoThree.sound)
+  // videoCount++
+  // }
 }
 
 
@@ -160,15 +153,52 @@ function animate() {
 function render(timestamp, frame) {
   const elapsedTime = clock.getElapsedTime()
 
-    //raycaster setting based on camera dir/pos 
-    const cameraDirection = getCameraDirectionNormalized(); //length = 1
-    const cameraPosition = getCameraPosition()
-    raycaster.set(cameraPosition, cameraDirection)
+  //raycaster setting based on camera dir/pos 
+  const cameraDirection = getCameraDirectionNormalized(); //length = 1
+  const cameraPosition = getCameraPosition()
+  raycaster.set(cameraPosition, cameraDirection)
 
-    const intersectsArray = raycaster.intersectObjects(objectsToIntersect)
+  const intersectsArray = raycaster.intersectObjects(objectsToIntersect)
+
+  //playing/pausing videos depands on Raycaster
+  if (intersectsArray.length > 0) {
+    for (const intersectObject of intersectsArray) {
+
+      //if the raycaster detect first object and not the one behind it
+      if (intersectObject.object !== savedIntersectedObject && savedIntersectedObject !== null) {
+        if (savedIntersectedObject.name == 'video1') {
+          videoOne.video.pause()
+        }
+        else if (savedIntersectedObject.name == 'video2') {
+          videoTwo.video.pause()
+        }
+        savedIntersectedObject = null;
+      }
+
+      //if the object is a mesh (i.e. a cube) we want to play the video
+      if (intersectObject.object instanceof THREE.Mesh) {
+        savedIntersectedObject = intersectObject.object
+
+        if (savedIntersectedObject.name == 'video1') {
+          videoOne.video.play()
+        }
+        else if (savedIntersectedObject.name == 'video2') {
+          videoTwo.video.play()
+        }
+      }
+    }
+  } else {
+    // if we have a last saved object, but our ray isn't currently selecting anything then we have to pause back the video
+    if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video1') {
+      videoOne.video.pause()
+    }
+    else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video2') {
+      videoTwo.video.pause()
+    }
+    savedIntersectedObject = null
+  }
 
 
-  //console.log(intersectsArray);
   renderer.render(scene, camera)
 }
 
