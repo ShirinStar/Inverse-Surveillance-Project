@@ -1,10 +1,10 @@
 import './style.css'
 import * as THREE from 'three'
-import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
+import { ARButton } from 'three/examples/jsm/webxr/ARButton.js'
 import gsap from 'gsap';
 import content from './content/contentList.js'
-import VideoNoiseMeshCube from './content/VideoNoiseMeshCube.js';
-import VideoStitchCube from './content/VideoStitchCube.js';
+import VideoNoiseMeshCube from './content/VideoNoiseMeshCube.js'
+import VideoStitchCube from './content/VideoStitchCube.js'
 import MarkerFragment from './content/shader/fragmentSquare.glsl'
 import MarkerVertex from './content/shader/vertexSquare.glsl'
 
@@ -283,6 +283,7 @@ function onSelect() {
   }
 }
 
+
 function animate() {
   renderer.setAnimationLoop(render);
 }
@@ -330,9 +331,11 @@ function render(timestamp, frame) {
         if (intersectObject.object !== savedIntersectedObject && savedIntersectedObject !== null) {
           if (savedIntersectedObject.name == 'video1') {
             videoOne.video.pause()
+            //videoOne.sound.pause()
           }
           else if (savedIntersectedObject.name == 'video2') {
             videoTwo.video.pause()
+           // videoTwo.sound.pause()
           }
           else if (savedIntersectedObject.name == 'video3') {
             videoThree.video.pause()
@@ -367,9 +370,11 @@ function render(timestamp, frame) {
 
           if (savedIntersectedObject.name == 'video1') {
             videoOne.video.play()
+            //videoOne.sound.play()
           }
           else if (savedIntersectedObject.name == 'video2') {
             videoTwo.video.play()
+            //videoTwo.sound.play()
           }
           else if (savedIntersectedObject.name == 'video3') {
             videoThree.video.play()
@@ -401,9 +406,11 @@ function render(timestamp, frame) {
       // if we have a last saved object, but our ray isn't currently selecting anything then we have to pause back the video
       if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video1') {
         videoOne.video.pause()
+        //videoOne.sound.pause()
       }
       else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video2') {
         videoTwo.video.pause()
+        //videoTwo.sound.pause()
       }
       else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video3') {
         videoThree.video.pause()

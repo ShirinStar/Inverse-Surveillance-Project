@@ -103,31 +103,6 @@ export default class VideoNoise {
     })
   }
 
-  // animateEnding() {
-  //   this.video.addEventListener('ended', () => {
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
-  //       delay: 0.2,
-  //       duration: 30,
-  //       value: 4
-  //     })
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
-  //       delay: 1,
-  //       duration: 30,
-  //       value: 5.0
-  //     })
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uPointSize, {
-  //       delay: 31,
-  //       duration: 30,
-  //       value: 2.0
-  //     })
-  //     gsap.to(this.videoNoiseMaterial.uniforms.uRange, {
-  //       delay: 40,
-  //       duration: 90,
-  //       value: 10
-  //     })
-  //   })
-  // }
-
   //control audio
   startAudio() {
     this.sound.play()

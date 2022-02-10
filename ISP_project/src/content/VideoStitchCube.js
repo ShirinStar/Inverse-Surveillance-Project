@@ -43,10 +43,10 @@ export default class VideoStitch {
       uniforms: {
         uTime: { value: 0 },
         uTexture: { value: this.videoTexture },
-        uLengthStripX: { value: 0.99 },
-        uLengthStripY: { value: 0.99 },
-        uWidthStripX: { value: 0.99 },
-        uWidthStripY: { value: 0.99 },
+        uLengthStripX: { value: 0.9 },
+        uLengthStripY: { value: 0.9 },
+        uWidthStripX: { value: 0.9 },
+        uWidthStripY: { value: 0.9 },
         uNumberOfStrips: { value: 25 },
       },
     })
