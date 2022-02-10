@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import gsap from 'gsap';
+import content from './content/contentList.js'
 import VideoNoiseMeshCube from './content/VideoNoiseMeshCube.js';
 import VideoStitchCube from './content/VideoStitchCube.js';
 import MarkerFragment from './content/shader/fragmentSquare.glsl'
@@ -19,21 +20,17 @@ let savedIntersectedObject = null;
 const objectsToIntersect = []
 
 //videos setting
-let videoPositionY = Math.random() + 0.15
 let videoCount = 0;
-
 let videoOne = null
-let mesh1;
-const videoOneClassName = '.video.one'
-const audioOne = '../audio/alan_watts_short.mp3'
-
 let videoTwo = null
-const videoTwoClassName = '.video.two'
-const audioTwo = '../audio/nina.mp3'
-
 let videoThree = null
-const videoThreeClassName = '.video.three'
-const audioThree = '../audio/Lynch.mp3'
+let videoFour = null
+let videoFive = null
+let videoSix = null
+let videoSeven = null
+let videoEight = null
+let videoNine = null
+let videoTen = null
 
 //scene setup
 const canvas = document.querySelector('.webgl')
@@ -63,11 +60,11 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.xr.enabled = true;
+renderer.xr.enabled = true
 
-const controller = renderer.xr.getController(0);
-controller.addEventListener('select', onSelect);
-scene.add(controller);
+const controller = renderer.xr.getController(0)
+controller.addEventListener('select', onSelect)
+scene.add(controller)
 
 const button = ARButton.createButton(renderer, {
   requiredFeatures: ["hit-test"],
@@ -75,32 +72,17 @@ const button = ARButton.createButton(renderer, {
   domOverlay: {
     root: document.body
   }
-});
+})
 
-document.body.appendChild(button);
+document.body.appendChild(button)
 button.style.backgroundColor = '#155C4D'
 
 const titles = document.querySelector('.enteringTitles')
 
 button.addEventListener('click', async () => {
-  console.log('enter AR');
+  console.log('enter AR')
   titles.style.display = 'none'
-
-  //clicking to end AR
-  if (videoOne !== null) {
-    videoOne.stopAudio()
-    // videoOne.videoGeometry.dispose()
-    // videoOne.videoNoiseMaterial.dispose()
-    // scene.remove(videoOne)
-  }
-  if (videoTwo !== null) {
-    videoTwo.stopAudio()
-  }
-  if (videoThree !== null) {
-    videoThree.stopAudio()
-  }
 })
-
 
 /*******************/
 /* Videos *///adding object with a tap
@@ -108,7 +90,7 @@ button.addEventListener('click', async () => {
 function onSelect() {
   if (hitTestMarker.visible) {
     if (videoCount === 0) {
-      videoOne = new VideoNoiseMeshCube(camera, videoOneClassName, audioOne)
+      videoOne = new VideoNoiseMeshCube(camera, content.videoOneClassName, content.audioOne)
       const mesh = videoOne.videoNoiseMesh
       // mesh.scale.multiplyScalar(0.4)
       mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
@@ -125,10 +107,9 @@ function onSelect() {
         duration: 5,
         y: Math.random() - 0.3
       })
-
     }
     else if (videoCount === 1) {
-      videoTwo = new VideoStitchCube(camera, videoTwoClassName, audioTwo)
+      videoTwo = new VideoStitchCube(camera, content.videoTwoClassName, content.audioTwo)
       const mesh = videoTwo.videoStitchMesh
       mesh.scale.multiplyScalar(0.5)
       mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
@@ -146,6 +127,159 @@ function onSelect() {
         y: Math.random() - 0.3
       })
     }
+    else if (videoCount === 2) {
+      videoThree = new VideoNoiseMeshCube(camera, content.videoThreeClassName, content.audioThree)
+      const mesh = videoThree.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video3'
+      scene.add(mesh)
+      mesh.add(videoThree.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 3) {
+      videoFour = new VideoNoiseMeshCube(camera, content.videoFourClassName, content.audioFour)
+      const mesh = videoFour.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video4'
+      scene.add(mesh)
+      mesh.add(videoFour.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 4) {
+      videoFive = new VideoNoiseMeshCube(camera, content.videoFiveClassName, content.audioFive)
+      const mesh = videoFive.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video5'
+      scene.add(mesh)
+      mesh.add(videoFive.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 5) {
+      videoSix = new VideoNoiseMeshCube(camera, content.videoSixClassName, content.audioSix)
+      const mesh = videoSix.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video6'
+      scene.add(mesh)
+      mesh.add(videoSix.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 6) {
+      videoSeven = new VideoNoiseMeshCube(camera, content.videoSevenClassName, content.audioSeven)
+      const mesh = videoSeven.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video7'
+      scene.add(mesh)
+      mesh.add(videoSeven.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 7) {
+      videoEight = new VideoNoiseMeshCube(camera, content.videoEightClassName, content.audioEight)
+      const mesh = videoEight.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video8'
+      scene.add(mesh)
+      mesh.add(videoEight.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 8) {
+      videoNine = new VideoNoiseMeshCube(camera, content.videoNineClassName, content.audioNine)
+      const mesh = videoNine.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video9'
+      scene.add(mesh)
+      mesh.add(videoNine.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+    else if (videoCount === 9) {
+      videoTen = new VideoNoiseMeshCube(camera, content.videoTenClassName, content.audioTen)
+      const mesh = videoTen.videoNoiseMesh
+      // mesh.scale.multiplyScalar(0.4)
+      mesh.position.set(0, 0, - 0.2).applyMatrix4(hitTestMarker.matrixWorld)
+      mesh.quaternion.setFromRotationMatrix(hitTestMarker.matrixWorld)
+      mesh.name = 'video10'
+      scene.add(mesh)
+      mesh.add(videoTen.sound)
+
+      objectsToIntersect.push(mesh)
+      videoCount++
+
+      gsap.to(mesh.position, {
+        delay: 2,
+        duration: 5,
+        y: Math.random() - 0.3
+      })
+    }
+
   }
 }
 
@@ -200,6 +334,30 @@ function render(timestamp, frame) {
           else if (savedIntersectedObject.name == 'video2') {
             videoTwo.video.pause()
           }
+          else if (savedIntersectedObject.name == 'video3') {
+            videoThree.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video4') {
+            videoFour.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video5') {
+            videoFive.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video6') {
+            videoSix.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video7') {
+            videoSeven.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video8') {
+            videoEight.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video9') {
+            videoNine.video.pause()
+          }
+          else if (savedIntersectedObject.name == 'video10') {
+            videoTen.video.pause()
+          }
           savedIntersectedObject = null;
         }
 
@@ -213,6 +371,30 @@ function render(timestamp, frame) {
           else if (savedIntersectedObject.name == 'video2') {
             videoTwo.video.play()
           }
+          else if (savedIntersectedObject.name == 'video3') {
+            videoThree.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video4') {
+            videoFour.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video5') {
+            videoFive.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video6') {
+            videoSix.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video7') {
+            videoSeven.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video8') {
+            videoEight.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video9') {
+            videoNine.video.play()
+          }
+          else if (savedIntersectedObject.name == 'video10') {
+            videoTen.video.play()
+          }
         }
       }
     } else {
@@ -222,6 +404,30 @@ function render(timestamp, frame) {
       }
       else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video2') {
         videoTwo.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video3') {
+        videoThree.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video4') {
+        videoFour.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video5') {
+        videoFive.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video6') {
+        videoSix.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video7') {
+        videoSeven.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video8') {
+        videoEight.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video9') {
+        videoNine.video.pause()
+      }
+      else if (savedIntersectedObject !== null && savedIntersectedObject.name == 'video10') {
+        videoTen.video.pause()
       }
       savedIntersectedObject = null
     }
@@ -265,7 +471,69 @@ async function initializeHitTestSource() {
   session.addEventListener("end", () => {
     hitTestSourceInitialized = false;
     hitTestSource = null;
-  });
+
+    //removing everything from scene
+    if (videoOne) {
+      videoOne.stopAudio()
+      videoOne.videoGeometry.dispose()
+      videoOne.videoNoiseMaterial.dispose()
+      scene.remove(videoOne)
+    }
+    if (videoTwo) {
+      videoTwo.stopAudio()
+      videoTwo.videoGeometry.dispose()
+      videoTwo.videoStitchMaterial.dispose()
+      scene.remove(videoTwo)
+    }
+    if (videoThree) {
+      videoThree.stopAudio()
+      videoThree.videoGeometry.dispose()
+      videoThree.videoNoiseMaterial.dispose()
+      scene.remove(videoThree)
+    }
+    if (videoFour) {
+      videoFour.stopAudio()
+      videoFour.videoGeometry.dispose()
+      videoFour.videoNoiseMaterial.dispose()
+      scene.remove(videoFour)
+    }
+    if (videoFive) {
+      videoFive.stopAudio()
+      videoFive.videoGeometry.dispose()
+      videoFive.videoNoiseMaterial.dispose()
+      scene.remove(videoFive)
+    }
+    if (videoSix) {
+      videoSix.stopAudio()
+      videoSix.videoGeometry.dispose()
+      videoSix.videoNoiseMaterial.dispose()
+      scene.remove(videoSix)
+    }
+    if (videoSeven) {
+      videoSeven.stopAudio()
+      videoSeven.videoGeometry.dispose()
+      videoSeven.videoNoiseMaterial.dispose()
+      scene.remove(videoSeven)
+    }
+    if (videoEight) {
+      videoEight.stopAudio()
+      videoEight.videoGeometry.dispose()
+      videoEight.videoNoiseMaterial.dispose()
+      scene.remove(videoEight)
+    }
+    if (videoNine) {
+      videoNine.stopAudio()
+      videoNine.videoGeometry.dispose()
+      videoNine.videoNoiseMaterial.dispose()
+      scene.remove(videoNine)
+    }
+    if (videoTen) {
+      videoTen.stopAudio()
+      videoTen.videoGeometry.dispose()
+      videoTen.videoNoiseMaterial.dispose()
+      scene.remove(videoTen)
+    }
+  })
 }
 
 /*******************/
