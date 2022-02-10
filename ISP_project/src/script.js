@@ -302,7 +302,7 @@ function render(timestamp, frame) {
       const hitTestResults = frame.getHitTestResults(hitTestSource);
 
       // XRHitTestResults The hit test may find multiple surfaces. The first one in the array is the one closest to the camera.
-      if (hitTestResults.length > 0) {
+      if (hitTestResults.length > 0 && videoCount < 10) {
         const hit = hitTestResults[0]
         // The pose represents the pose of a point on a surface.
         const pose = hit.getPose(localSpace)
